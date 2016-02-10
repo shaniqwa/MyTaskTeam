@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">MyTaskTeam</string>
+    <string name="status_no_res">&#xf059;</string>
+    <string name="status_accept_waiting">&#xf28b;</string>
+    <string name="status_accept_waiting_text">Waiting &#xf28b;</string>
+    <string name="status_accept_in_process">&#xf0a9;</string>
+    <string name="status_accept_in_process_text">In Process &#xf0a9;</string>
+    <string name="status_accept_done">&#xf058;</string>
+    <string name="status_accept_done_text">Done &#xf058;</string>
+    <string name="status_reject">&#xf057;</string>
+    <string name="status_reject_text">Reject &#xf057;</string>
+    <string name="add_member">&#xf234;</string>
+    <string name="add_task">&#xf067;</string>
+
+    <string name="add_task_title">Add Task</string>
+    <string name="add_member_title">Invite Member</string>
+
+
+    <string-array name="bars_menu">
+        <item>About this app</item>
+        <item>Help</item>
+    </string-array>
+
+</resources>

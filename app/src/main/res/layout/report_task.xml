@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingLeft="30px"
+    android:paddingTop="30px"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Category"
+        android:paddingTop="10px"
+        android:id="@+id/textCat"
+        android:layout_gravity="left" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Description"
+        android:paddingTop="10px"
+        android:id="@+id/textDes" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Assignee"
+        android:paddingTop="10px"
+        android:id="@+id/textAssignee" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Priority"
+        android:paddingTop="30px"
+        android:id="@+id/textPriority" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Location"
+        android:paddingTop="10px"
+        android:id="@+id/textLocation" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Due Date"
+        android:paddingTop="10px"
+        android:paddingBottom="30px"
+        android:id="@+id/textDueDate" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Status"
+        android:paddingTop="10px"
+        android:id="@+id/textView13" />
+    <RadioGroup
+        android:layout_width="160dp"
+        android:id="@+id/radioGroupAcceptReject"
+        android:layout_height="wrap_content">
+            <RadioButton
+                android:layout_width="158dp"
+                android:layout_height="wrap_content"
+                android:text="@string/status_reject_text"
+                android:id="@+id/reject" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accept"
+                android:id="@+id/accept"
+                android:checked="true" />
+
+    </RadioGroup>
+
+    <RadioGroup
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroupAcceptStatus"
+        android:paddingLeft="50px"
+        android:layout_weight="0.54">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_accept_waiting_text"
+            android:id="@+id/waiting"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_accept_in_process_text"
+            android:id="@+id/in_process"
+            android:checked="false"
+            android:layout_gravity="left" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status_accept_done_text"
+            android:id="@+id/done"
+            android:checked="false"
+            android:layout_gravity="left" />
+
+    </RadioGroup>
+
+</LinearLayout>
