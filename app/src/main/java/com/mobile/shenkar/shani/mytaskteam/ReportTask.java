@@ -62,7 +62,7 @@ public class ReportTask extends AppCompatActivity {
 
         try {
             cat.setText(task.getString("cat"));
-            setRadioForStatus(task.getString("status"));
+//            setRadioForStatus(task.getString("status"));
         } catch (JSONException e) {
             cat.setText("Error");
         }
@@ -92,7 +92,7 @@ public class ReportTask extends AppCompatActivity {
 
             }
             else if(p.compareTo("2") == 1) {
-                // in proccess
+                // in process
                 accept_in_process.setSelected(true);
 
             }

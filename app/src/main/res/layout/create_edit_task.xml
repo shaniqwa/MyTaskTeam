@@ -16,75 +16,37 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Category"
-        android:id="@+id/textView"
+        android:id="@+id/catText"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/catSpinner"
+        android:textColor="#000"
+        android:minWidth="200dp"
+        android:layout_below="@+id/catText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Priority"
+        android:id="@+id/priText"
+        android:layout_below="@+id/catSpinner"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/radioGroupCat"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="General"
-            android:id="@+id/radioButtonGeneral"
-            android:checked="false"
-            android:layout_alignLeft="@+id/radioButtonComputers"
-            android:layout_alignStart="@+id/radioButtonComputers" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Other"
-            android:id="@+id/radioButtonOther"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:checked="false" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cleaning"
-            android:id="@+id/radioButtonCleaning"
-            android:layout_below="@+id/textView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:checked="false" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Electricity"
-            android:id="@+id/radioButtonElectricity"
-            android:checked="false"
-            android:layout_below="@+id/radioButtonCleaning"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Computers"
-            android:id="@+id/radioButtonComputers"
-            android:checked="false"
-            android:layout_alignTop="@+id/radioButtonCleaning"
-            android:layout_toLeftOf="@+id/radioButton5"
-            android:layout_toStartOf="@+id/radioButton5" />
-
-    </RadioGroup>
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/radioGroupPriority"
         android:orientation="horizontal"
-        android:layout_below="@+id/textView5"
+        android:layout_below="@+id/priText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
@@ -122,11 +84,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/des"
-        android:text="Discription"
         android:layout_weight="1"
         android:layout_below="@+id/textView7"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/spinner2"
+        android:layout_alignEnd="@+id/spinner2" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -201,33 +164,6 @@
 
     </RadioGroup>
 
-    <AutoCompleteTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Assign to"
-        android:id="@+id/autoCompleteTextAssignee"
-        android:layout_below="@+id/textView8"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/submit_task"
-        android:layout_below="@+id/autoCompleteTextAssignee"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Priority"
-        android:id="@+id/textView5"
-        android:layout_below="@+id/radioGroupCat"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -248,6 +184,24 @@
         android:layout_below="@+id/des"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/asigneeSpinner"
+        android:textColor="#000"
+        android:minWidth="200dp"
+        android:layout_below="@+id/textView8"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/submit_task"
+        android:layout_below="@+id/spinner2"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
 </ScrollView>
