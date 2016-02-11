@@ -28,29 +28,29 @@
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_task"
-        android:onClick="AddTaskClicked"
+        android:id="@+id/fab_check_task"
+        android:onClick=""
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:clickable="true"
-        android:src="@drawable/ic_action_name"
+        android:src="@drawable/ic_action_editor_vertical_align_bottom"
         app:layout_anchor="@id/viewpager"
         app:layout_anchorGravity="bottom|right|end"/>
 
-    
+
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_check_task"
-        android:onClick=""
+        android:id="@+id/fab_add_task"
+        android:onClick="AddTaskClicked"
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="90dp"
         android:clickable="true"
-        android:src="@drawable/ic_action_editor_vertical_align_bottom"
+        android:src="@drawable/ic_action_name"
         app:layout_anchor="@id/viewpager"
         app:layout_anchorGravity="bottom|right|end"/>
 
