@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,8 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(strUID.compareTo("-1") == 0) {
                         showToast("Oops! something went wrong.. please try again");
                     }
-                    else
-                    {
+                    else{
 //                        showToast("Logged in as user id: " + strUID);
 
                         SharedPreferences prefs = getSharedPreferences("MyTaskTeam", MODE_PRIVATE);
@@ -79,13 +79,11 @@ public class LoginActivity extends AppCompatActivity {
         thread.start();
     }
 
-    public void showToast(final String toast)
-    {
-
+    public void showToast(final String toast) {
         final int width = this.getWindow().getAttributes().width;
         runOnUiThread(new Runnable() {
             public void run() {
-                //Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
                 Intent i = new Intent("android.intent.action.ALERT");
                 i.putExtra("AlertBoxText", toast);
                 i.putExtra("ParentWidth", width);

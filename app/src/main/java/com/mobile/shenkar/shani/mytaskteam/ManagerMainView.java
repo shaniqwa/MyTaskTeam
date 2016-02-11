@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,7 +103,9 @@ public class ManagerMainView extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, R.id.add_member, Menu.NONE, R.string.add_member_title);
+        if(getMyRole().compareTo("manager") == 0) {
+            menu.add(Menu.NONE, R.id.add_member, Menu.NONE, R.string.add_member_title);
+        }
         menu.add(Menu.NONE, R.id.logout, Menu.NONE,"Logout");
         return super.onCreateOptionsMenu(menu);
     }
@@ -111,10 +114,10 @@ public class ManagerMainView extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_member:
-                // do whatever
+                AddMemberClicked();
                 return true;
-            case R.id.add_task:
-                // do whatever
+            case R.id.logout:
+                Logout();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -168,7 +171,10 @@ public class ManagerMainView extends AppCompatActivity {
         Intent myIntent = new Intent(ManagerMainView.this, CreateEditTask.class);
         ManagerMainView.this.startActivity(myIntent);
     }
-
+    public void AddMemberClicked(){
+        Intent myIntent = new Intent(ManagerMainView.this, InviteMembers.class);
+        ManagerMainView.this.startActivity(myIntent);
+    }
 
     public void Logout(){
         //clear my data
@@ -177,6 +183,18 @@ public class ManagerMainView extends AppCompatActivity {
         editor.apply();
         Intent myIntent = new Intent(ManagerMainView.this, MainActivity.class);
         ManagerMainView.this.startActivity(myIntent);
+    }
+    public void showToast(final String toast) {
+        final int width = this.getWindow().getAttributes().width;
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
+                Intent i = new Intent("android.intent.action.ALERT");
+                i.putExtra("AlertBoxText", toast);
+                i.putExtra("ParentWidth", width);
+                startActivity(i);
+            }
+        });
     }
 
 }

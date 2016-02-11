@@ -22,11 +22,13 @@
             android:screenOrientation="portrait"/>
         <activity android:label="Report Task" android:name=".ReportTask" android:configChanges="orientation"
             android:screenOrientation="portrait"/>
-        <activity android:label="Edit Task" android:name=".CreateEditTask" android:configChanges="orientation"
+        <activity android:label="Create/Edit Task" android:name=".CreateEditTask" android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:label="Main View" android:name="ManagerMainView" android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:label="Login" android:name=".LoginActivity" android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:label="Invite Members" android:name=".InviteMembers" android:configChanges="orientation"
             android:screenOrientation="portrait"/>
     </application>
 

@@ -95,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     if(strUID.compareTo("-1") == 0) {
                         showToast("Oops! something went wrong.. please try again");
                     }
-                    else
-                    {
+                    else {
 //                        showToast("Logged in as user id: " + strUID);
 
                         SharedPreferences prefs = getSharedPreferences("MyTaskTeam", MODE_PRIVATE);
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                         editor.commit();
 
                         //set the next activity
+                        //todo : go to invite member activity first to choose taem name and members. only then continue to main view
                         Intent myIntent = new Intent(MainActivity.this, ManagerMainView.class);
                         myIntent.putExtra("UID", strUID);
                         myIntent.putExtra("role", "manager");

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,8 +43,7 @@ public class PageFragment extends ListFragment {
 
 
     }
-private void setClickEventOnList()
-{
+private void setClickEventOnList() {
     MylistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -58,13 +56,10 @@ private void setClickEventOnList()
                 if(getRole().compareTo("manager") == 0) {
                     intent = new Intent(getActivity(), CreateEditTask.class);
                 }
-                else
-                {
+                else{
                      intent = new Intent(getActivity(), ReportTask.class);
                 }
-
-                if(intent != null)
-                {
+                if(intent != null) {
                     intent.putExtra("task_json", obj.toString());
                     getActivity().startActivity(intent);
                 }
@@ -76,8 +71,7 @@ private void setClickEventOnList()
         }
     });
 }
-private String getRole()
-{
+private String getRole() {
     ManagerMainView t = (ManagerMainView)getActivity();
     return t.myRole;
 }
@@ -123,8 +117,7 @@ private String getRole()
                 }
                 adapter = new InteractiveArrayAdapter(getActivity(), arrObjects);
 
-                if(adapter != null)
-                {
+                if(adapter != null) {
                     setListAdapter(adapter);
                 }
             } catch (Exception e) {
