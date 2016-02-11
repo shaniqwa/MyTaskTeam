@@ -20,10 +20,6 @@ public class ReportTask extends AppCompatActivity {
         protected TextView dueDate;
         protected TextView status;
 
-        private RadioButton priority_high;
-        private RadioButton priority_medium;
-        private RadioButton priority_low;
-
         private RadioButton accept;
         private RadioButton accept_waiting;
         private RadioButton accept_in_process;
@@ -62,7 +58,7 @@ public class ReportTask extends AppCompatActivity {
 
         try {
             cat.setText(task.getString("cat"));
-//            setRadioForStatus(task.getString("status"));
+            setRadioForStatus(task.getString("status"));
         } catch (JSONException e) {
             cat.setText("Error");
         }

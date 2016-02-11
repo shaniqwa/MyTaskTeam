@@ -200,7 +200,7 @@ public class CreateEditTask extends AppCompatActivity {
             int assigneeSpinnerPosition = assigneeArrayAdapter.getPosition(currAssignee);
             assignee.setSelection(assigneeSpinnerPosition);
 
-            setRadioForPriority(task.getString("priority"));
+            setRadioForPriopiry(task.getString("priority"));
         } catch (JSONException e) {
             des.setText("");
         }
@@ -310,32 +310,27 @@ public class CreateEditTask extends AppCompatActivity {
 //        thread.start();
     }
 
-    void setRadioForPriority(String p) {
+    void setRadioForPriopiry(String p) {
         // set all to false
-//        priority_high.setSelected(false);
-//        priority_medium.setSelected(false);
-//        priority_low.setSelected(true);
-//
-//        // set the proper one to true
-//        if(p.compareTo("1") == 1) {
-//            priority_high.setSelected(true);
-//        }
-//        if(p.compareTo("2") == 1){
-//            priority_medium.setSelected(true);
-//        }
-//        if(p.compareTo("3") == 1) {
-//            priority_low.setSelected(true);
-//
-//        }
-//    }
-//
-//    void setRadioForCategory(String p) {
-//
-//
-//    }
-//
-//    void setRadioForDate(String p) {
-//    }
+        priority_high.setSelected(false);
+        priority_medium.setSelected(false);
+        priority_low.setSelected(false);
+
+        // set the proper one to true
+        if(p.compareTo("1")==0) {
+            // priority = low
+            priority_low.setSelected(true);
+        }
+        else if(p.compareTo("2") == 0) {
+            // priority = medium
+            priority_medium.setSelected(true);
+
+        }
+        else if(p.compareTo("3") == 0) {
+            // priority = high
+            priority_high.setSelected(true);
+
+        }
     }
 }
 
