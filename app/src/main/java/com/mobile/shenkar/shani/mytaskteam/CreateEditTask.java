@@ -148,6 +148,20 @@ public class CreateEditTask extends AppCompatActivity {
             thread.start();
         }
 
+        ArrayList<JSONObject> arrObjects = new ArrayList<JSONObject>();
+        try {
+            if(m_allMembers != null) {
+                    for (int j = 0; j < m_allMembers.length(); j++) {
+                        JSONObject obj = m_allMembers.getJSONObject(j);
+                        obj.getString("memberName");
+                            arrObjects.add(obj);
+                    }
+            }
+
+        } catch (JSONException e) {
+            Log.e("err: " , e.getMessage());
+        }
+
 
         //set current task values - edit task
         try {
