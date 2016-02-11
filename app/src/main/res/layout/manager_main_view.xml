@@ -39,6 +39,8 @@
         app:layout_anchor="@id/viewpager"
         app:layout_anchorGravity="bottom|right|end"/>
 
+    <!--regersg-->
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_check_task"
         android:onClick=""
