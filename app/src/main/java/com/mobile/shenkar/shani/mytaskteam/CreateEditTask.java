@@ -36,6 +36,8 @@ public class CreateEditTask extends AppCompatActivity {
     private RadioButton priority_medium;
     private RadioButton priority_low;
 
+    private String currAssignee;
+
 
     EditText des;
     Spinner assignee;
@@ -112,15 +114,14 @@ public class CreateEditTask extends AppCompatActivity {
 
 
 
-        //ASSIGNEE SPINNER
-        //get team members list from the server
+        //get team members list from the server (to fill assignee spinner)
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 JSONObject json_req = new JSONObject();
                 String res = "";
                 try {
-                    json_req.put("teamID", "43");
+                    json_req.put("teamID", task.getString("teamID"));
                 } catch (JSONException e) {
                     res = "-1";
                 }
@@ -143,19 +144,42 @@ public class CreateEditTask extends AppCompatActivity {
                 }
             }
         });
-        if(m_allMembers == null)
-        {
+        if(m_allMembers == null){
             thread.start();
         }
+
+        while(m_allMembers == null)
+        {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //ASSIGNEE SPINNER
+        List<String> assignee_list;
+        assignee_list = new ArrayList<String>();
+
+        // Initializing an ArrayAdapter for assignee spinner
+        ArrayAdapter<String> assigneeArrayAdapter = new ArrayAdapter<String>(
+                this, R.layout.spinner_item, assignee_list
+        );
+        assigneeArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        assignee.setAdapter(assigneeArrayAdapter);
 
         ArrayList<JSONObject> arrObjects = new ArrayList<JSONObject>();
         try {
             if(m_allMembers != null) {
                     for (int j = 0; j < m_allMembers.length(); j++) {
                         JSONObject obj = m_allMembers.getJSONObject(j);
-                        obj.getString("memberName");
+                        assignee_list.add(obj.getString("memberName"));
+                        if(obj.getString("memberID").compareTo(task.getString("assignee"))==0){
+                            currAssignee = obj.getString("memberName");
+                        }
                             arrObjects.add(obj);
                     }
+                assigneeArrayAdapter.notifyDataSetChanged();
             }
 
         } catch (JSONException e) {
@@ -163,7 +187,7 @@ public class CreateEditTask extends AppCompatActivity {
         }
 
 
-        //set current task values - edit task
+        //START set current task values - edit task
         try {
             des.setText(task.getString("des"));
 
@@ -173,11 +197,14 @@ public class CreateEditTask extends AppCompatActivity {
             int categorySpinnerPosition = categoryArrayAdapter.getPosition(task.getString("cat"));
             category.setSelection(categorySpinnerPosition);
 
+            int assigneeSpinnerPosition = assigneeArrayAdapter.getPosition(currAssignee);
+            assignee.setSelection(assigneeSpinnerPosition);
+
             setRadioForPriority(task.getString("priority"));
         } catch (JSONException e) {
             des.setText("");
         }
-        // end set current task values - edit task
+        //END set current task values - edit task
 
 
         addListenerOnButton();

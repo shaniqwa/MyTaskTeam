@@ -183,6 +183,7 @@ public class ManagerMainView extends AppCompatActivity {
         editor.apply();
         Intent myIntent = new Intent(ManagerMainView.this, MainActivity.class);
         ManagerMainView.this.startActivity(myIntent);
+        finish();
     }
     public void showToast(final String toast) {
         final int width = this.getWindow().getAttributes().width;

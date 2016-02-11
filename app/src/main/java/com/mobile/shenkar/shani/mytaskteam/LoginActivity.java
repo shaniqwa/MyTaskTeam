@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     if(strUID.compareTo("-1") == 0) {
-                        showToast("Oops! something went wrong.. please try again");
+//                        showToast("Oops! something went wrong.. please try again");
                     }
                     else{
 //                        showToast("Logged in as user id: " + strUID);

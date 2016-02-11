@@ -88,8 +88,8 @@
         android:layout_below="@+id/textView7"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/spinner2"
-        android:layout_alignEnd="@+id/spinner2" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -188,7 +188,7 @@
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/asigneeSpinner"
+        android:id="@+id/assigneeSpinner"
         android:textColor="#000"
         android:minWidth="200dp"
         android:layout_below="@+id/textView8"
@@ -200,7 +200,7 @@
         android:layout_height="wrap_content"
         android:text="Save"
         android:id="@+id/submit_task"
-        android:layout_below="@+id/spinner2"
+        android:layout_below="@+id/assigneeSpinner"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
