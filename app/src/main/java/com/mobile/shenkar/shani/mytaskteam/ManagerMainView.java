@@ -47,9 +47,11 @@ public class ManagerMainView extends AppCompatActivity {
 
         //set layout
         setContentView(R.layout.manager_main_view);
-        FloatingActionButton floating = (FloatingActionButton)findViewById(R.id.fab_add_task);
+       FloatingActionButton floating = (FloatingActionButton)findViewById(R.id.fab_add_task);
+
         if(this.myRole.compareTo("manager") != 0) {
             floating.hide();
+
         }
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
