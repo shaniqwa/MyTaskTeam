@@ -1,17 +1,19 @@
 package com.mobile.shenkar.shani.mytaskteam;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,11 +23,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Shani on 1/18/16.
  */
-public class CreateEditTask extends AppCompatActivity {
+public class CreateEditTask extends AppCompatActivity implements View.OnClickListener {
 
     private JSONObject task;
 
@@ -38,6 +41,8 @@ public class CreateEditTask extends AppCompatActivity {
     private RadioButton priority_medium;
     private RadioButton priority_low;
 
+    int currPriority;
+
     private RadioButton date_today;
     private RadioButton date_tom;
     private RadioButton date;
@@ -45,13 +50,19 @@ public class CreateEditTask extends AppCompatActivity {
     private String currAssignee;
 
 
-    TextView currDate;
+//    TextView currDate;
     EditText des;
     Spinner assignee;
     Spinner location;
     Spinner category;
 
+    String myID;
+
     JSONArray m_allMembers = null;
+
+    private EditText dateSelection;
+    private DatePickerDialog dateSelectionPickerDialog;
+    private SimpleDateFormat dateFormatter;
 
     boolean create = true;
 
@@ -61,32 +72,52 @@ public class CreateEditTask extends AppCompatActivity {
         setContentView(R.layout.create_edit_task);
 
         // receives values from previous activity
-        if (savedInstanceState == null) {
-            create = false;
+            if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if (extras == null) {
+            if (extras.getString("task_json") == null) { //create task
                 task = new JSONObject();
-            } else {
+                myID = extras.getString("myID");
+            } else { //edit task
                 try {
+                    create = false;
                     task = new JSONObject(extras.getString("task_json"));
+                    myID = task.getString("teamID");
                 } catch (JSONException e) {
                     task = new JSONObject();
                 }
             }
         } else {
             task = new JSONObject();
+            myID = null;
         }
 
-        //links to layout
+//        START date picker settings
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+        dateSelection = (EditText) findViewById(R.id.date_selecion);
+        dateSelection.setInputType(InputType.TYPE_NULL);
+        dateSelection.requestFocus();
+
+        dateSelection.setOnClickListener(this);
+        Calendar newCalendar = Calendar.getInstance();
+        dateSelectionPickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                dateSelection.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+//        END date picker settings
+
+//      START findViewsById
         des = (EditText) findViewById(R.id.des);
-        currDate = (TextView) findViewById(R.id.textDATE);
+//        currDate = (TextView) findViewById(R.id.textDATE);
         assignee = (Spinner) findViewById(R.id.assigneeSpinner);
         location = (Spinner) findViewById(R.id.location_select);
         category = (Spinner) findViewById(R.id.catSpinner);
 
-        // radio button links to layout
-        radioGroupPriority = (RadioGroup) findViewById(R.id.radioGroupPriority);
-        radioGroupDate = (RadioGroup) findViewById(R.id.radioGroupDate);
 
         priority_high = (RadioButton) findViewById(R.id.radioHigh);
         priority_medium = (RadioButton) findViewById(R.id.radioMedium);
@@ -95,6 +126,7 @@ public class CreateEditTask extends AppCompatActivity {
         date_today = (RadioButton) findViewById(R.id.radioButton11);
         date_tom = (RadioButton) findViewById(R.id.radioButton14);
         date = (RadioButton) findViewById(R.id.radioButton15);
+//      END findViewsById
 
 
         //LOCATION SPINNER
@@ -140,7 +172,8 @@ public class CreateEditTask extends AppCompatActivity {
                 JSONObject json_req = new JSONObject();
                 String res = "";
                 try {
-                    json_req.put("teamID", task.getString("teamID"));
+//                    json_req.put("teamID", task.getString("teamID"));
+                    json_req.put("teamID", myID);
                 } catch (JSONException e) {
                     res = "-1";
                 }
@@ -161,7 +194,7 @@ public class CreateEditTask extends AppCompatActivity {
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
                 }
-            }
+            }//end thread
         });
         if(m_allMembers == null){
             thread.start();
@@ -190,50 +223,96 @@ public class CreateEditTask extends AppCompatActivity {
         ArrayList<JSONObject> arrObjects = new ArrayList<JSONObject>();
         try {
             if(m_allMembers != null) {
-                    for (int j = 0; j < m_allMembers.length(); j++) {
-                        JSONObject obj = m_allMembers.getJSONObject(j);
-                        assignee_list.add(obj.getString("memberName"));
-                        if(obj.getString("memberID").compareTo(task.getString("assignee"))==0){
-                            currAssignee = obj.getString("memberName");
-                        }
-                            arrObjects.add(obj);
+                for (int j = 0; j < m_allMembers.length(); j++) {
+                    JSONObject obj = m_allMembers.getJSONObject(j);
+                    assignee_list.add(obj.getString("memberName"));
+                    if(!create && obj.getString("memberID").compareTo(task.getString("assignee"))==0){
+                        currAssignee = obj.getString("memberName");
                     }
+                    arrObjects.add(obj);
+                }
                 assigneeArrayAdapter.notifyDataSetChanged();
             }
 
         } catch (JSONException e) {
-            Log.e("err: " , e.getMessage());
+            Log.e("err: ", e.getMessage());
         }
 
+        if(!create){
+            //START set current task values - edit task
+            try {
+                des.setText(task.getString("des"));
 
-        //START set current task values - edit task
-        try {
-            des.setText(task.getString("des"));
-            currDate.setText(task.getString("dueTime"));
+                int locationSpinnerPosition = locationArrayAdapter.getPosition(task.getString("location"));
+                location.setSelection(locationSpinnerPosition);
 
-            int locationSpinnerPosition = locationArrayAdapter.getPosition(task.getString("location"));
-            location.setSelection(locationSpinnerPosition);
+                int categorySpinnerPosition = categoryArrayAdapter.getPosition(task.getString("cat"));
+                category.setSelection(categorySpinnerPosition);
 
-            int categorySpinnerPosition = categoryArrayAdapter.getPosition(task.getString("cat"));
-            category.setSelection(categorySpinnerPosition);
+                int assigneeSpinnerPosition = assigneeArrayAdapter.getPosition(currAssignee);
+                assignee.setSelection(assigneeSpinnerPosition);
 
-            int assigneeSpinnerPosition = assigneeArrayAdapter.getPosition(currAssignee);
-            assignee.setSelection(assigneeSpinnerPosition);
+                setRadioForPriority(task.getString("priority"));
+                currPriority = Integer.parseInt(task.getString("priority"));
 
-            setRadioForPriority(task.getString("priority"));
-
-            setRadioForDate(task.getString("dueTime"));
-        } catch (JSONException e) {
-            des.setText("");
+                setRadioForDate(task.getString("dueTime"));
+            } catch (JSONException e) {
+                des.setText("");
+            }
+            //END set current task values - edit task
+        }else{
+//            currDate.setVisibility(View.GONE);
         }
-        //END set current task values - edit task
+        // radio button links to layout and add event listeners
+        radioGroupPriority = (RadioGroup) findViewById(R.id.radioGroupPriority);
+        radioGroupPriority.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId) {
+                    case R.id.radioLow:
+                        currPriority = 1;
+                        break;
+                    case R.id.radioMedium:
+                        currPriority = 2;
+                        break;
+                    case R.id.radioHigh:
+                        currPriority = 3;
+                        break;
+                }
+            }
+        });
+        radioGroupDate = (RadioGroup) findViewById(R.id.radioGroupDate);
+        radioGroupDate.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = df.format(c.getTime());
+
+                switch(checkedId) {
+                    case R.id.radioButton11: //today
+                        dateSelection.setText(formattedDate);
+                        break;
+                    case R.id.radioButton14: //tomorrow
+                        c.add(Calendar.DATE, 1);
+                        formattedDate = df.format(c.getTime());
+                        dateSelection.setText(formattedDate);
+
+                        break;
+                    case R.id.radioButton15: //other date
+                        dateSelectionPickerDialog.show();
+                        break;
+                }
+
+            }
+        });
+
 
     }
 
 
     public void save_create_edit(View view) {
 
-        //todo : check if action needed is create/edit by checking how i got to this page (by clicking + floating button -> create, else -> edit)
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -244,6 +323,7 @@ public class CreateEditTask extends AppCompatActivity {
                     int selectedId = radioGroupPriority.getCheckedRadioButtonId();
                     RadioButton radioButton = (RadioButton) findViewById(selectedId);
 
+                    System.out.print(radioButton);
                     String currAssigneeID = null;
                     for (int j = 0; j < m_allMembers.length(); j++) {
                         JSONObject obj = m_allMembers.getJSONObject(j);
@@ -260,9 +340,9 @@ public class CreateEditTask extends AppCompatActivity {
                             json.put("taskID", task.getString("taskID"));
                             json.put("category", category.getSelectedItem().toString());
                             json.put("des", des.getText());
-                            json.put("priority", "2"); //update
+                            json.put("priority", currPriority);
                             json.put("location", location.getSelectedItem().toString());
-                            json.put("due_date", "today"); //update
+                            json.put("due_date", dateSelection.getText());
                             json.put("assignee", currAssigneeID);
                             json.put("action", "edit");
                             json.put("teamID", task.getString("teamID"));
@@ -277,12 +357,12 @@ public class CreateEditTask extends AppCompatActivity {
                             json.put("taskID", "null");
                             json.put("category", category.getSelectedItem().toString());
                             json.put("des", des.getText());
-                            json.put("priority", "2"); //update
+                            json.put("priority",currPriority);
                             json.put("location", location.getSelectedItem().toString());
-                            json.put("due_date", "today"); //update
+                            json.put("due_date", dateSelection.getText());
                             json.put("assignee", currAssigneeID);
                             json.put("action", "create");
-                            json.put("teamID", task.getString("teamID"));
+                            json.put("teamID", myID);
 
                         } catch (JSONException e) {
                             strUID = "-1";
@@ -304,7 +384,7 @@ public class CreateEditTask extends AppCompatActivity {
                         //set the next activity
                         Intent myIntent = new Intent(CreateEditTask.this, ManagerMainView.class);
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        myIntent.putExtra("UID", task.getString("teamID"));
+                        myIntent.putExtra("UID", myID);
                         myIntent.putExtra("role", "manager");
                         CreateEditTask.this.startActivity(myIntent);
                         finish();
@@ -359,6 +439,7 @@ public class CreateEditTask extends AppCompatActivity {
             if(p.compareTo(formattedDate) == 0) {
                 // date = today
                 date_today.setChecked(true);
+                dateSelection.setText(formattedDate);
             }
             else{
                 c.add(Calendar.DATE, 1);
@@ -366,8 +447,16 @@ public class CreateEditTask extends AppCompatActivity {
                 if(p.compareTo(formattedDate) == 0) {
                     // date = tomorrow
                     date_tom.setChecked(true);
+                    dateSelection.setText(formattedDate);
                 }else{
                     date.setChecked(true);
+                    String[] separated = p.split("-");
+                    int year = Integer.parseInt(separated[0]);
+                    int mon = Integer.parseInt(separated[1]);
+                    int day = Integer.parseInt(separated[2]);
+                    c.set(year, mon-1, day );
+                    dateSelectionPickerDialog.updateDate(year,mon-1,day);
+                    dateSelection.setText(dateFormatter.format(c.getTime()));
                 }
             }
         }catch (Exception ex) {
@@ -375,5 +464,11 @@ public class CreateEditTask extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        if(view == dateSelection) {
+            dateSelectionPickerDialog.show();
+        }
+    }
 }
 

@@ -14,6 +14,7 @@
 
     <string name="add_task_title">Add Task</string>
     <string name="add_member_title">Invite Member</string>
+    <string name="date">Date</string>
 
 
     <string-array name="bars_menu">

@@ -80,15 +80,18 @@
 
     </RadioGroup>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/date_selecion"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/textDATE"
-        android:layout_below="@+id/radioGroupDate"
+        android:layout_weight=".5"
+        android:hint="@string/date"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/radioGroupDate"
+        android:layout_toLeftOf="@+id/submit_task"
+        android:layout_toStartOf="@+id/submit_task" />
+
 
     <EditText
         android:layout_width="wrap_content"
@@ -174,9 +177,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Description"
         android:id="@+id/textView7"
-        android:layout_below="@+id/textDATE"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/date_selecion" />
 
     <TextView
         android:layout_width="wrap_content"
