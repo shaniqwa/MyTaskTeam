@@ -1,5 +1,6 @@
 package com.mobile.shenkar.shani.mytaskteam;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,12 +11,15 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -26,9 +30,7 @@ public class CreateEditTask extends AppCompatActivity {
     private JSONObject task;
 
     private RadioGroup radioGroupDate;
-    private RadioButton radioButtonDate;
     private RadioGroup radioGroupPriority;
-    private RadioButton radioButtonPriority;
     private Button btnDisplay;
 
 
@@ -36,15 +38,22 @@ public class CreateEditTask extends AppCompatActivity {
     private RadioButton priority_medium;
     private RadioButton priority_low;
 
+    private RadioButton date_today;
+    private RadioButton date_tom;
+    private RadioButton date;
+
     private String currAssignee;
 
 
+    TextView currDate;
     EditText des;
     Spinner assignee;
     Spinner location;
     Spinner category;
 
     JSONArray m_allMembers = null;
+
+    boolean create = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +62,7 @@ public class CreateEditTask extends AppCompatActivity {
 
         // receives values from previous activity
         if (savedInstanceState == null) {
+            create = false;
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
                 task = new JSONObject();
@@ -69,14 +79,23 @@ public class CreateEditTask extends AppCompatActivity {
 
         //links to layout
         des = (EditText) findViewById(R.id.des);
+        currDate = (TextView) findViewById(R.id.textDATE);
         assignee = (Spinner) findViewById(R.id.assigneeSpinner);
         location = (Spinner) findViewById(R.id.location_select);
         category = (Spinner) findViewById(R.id.catSpinner);
 
         // radio button links to layout
+        radioGroupPriority = (RadioGroup) findViewById(R.id.radioGroupPriority);
+        radioGroupDate = (RadioGroup) findViewById(R.id.radioGroupDate);
+
         priority_high = (RadioButton) findViewById(R.id.radioHigh);
         priority_medium = (RadioButton) findViewById(R.id.radioMedium);
         priority_low = (RadioButton) findViewById(R.id.radioLow);
+
+        date_today = (RadioButton) findViewById(R.id.radioButton11);
+        date_tom = (RadioButton) findViewById(R.id.radioButton14);
+        date = (RadioButton) findViewById(R.id.radioButton15);
+
 
         //LOCATION SPINNER
         List<String> location_list;
@@ -190,6 +209,7 @@ public class CreateEditTask extends AppCompatActivity {
         //START set current task values - edit task
         try {
             des.setText(task.getString("des"));
+            currDate.setText(task.getString("dueTime"));
 
             int locationSpinnerPosition = locationArrayAdapter.getPosition(task.getString("location"));
             location.setSelection(locationSpinnerPosition);
@@ -200,137 +220,160 @@ public class CreateEditTask extends AppCompatActivity {
             int assigneeSpinnerPosition = assigneeArrayAdapter.getPosition(currAssignee);
             assignee.setSelection(assigneeSpinnerPosition);
 
-            setRadioForPriopiry(task.getString("priority"));
+            setRadioForPriority(task.getString("priority"));
+
+            setRadioForDate(task.getString("dueTime"));
         } catch (JSONException e) {
             des.setText("");
         }
         //END set current task values - edit task
 
-
-        addListenerOnButton();
-
     }
 
-    public void addListenerOnButton() {
-
-        radioGroupDate = (RadioGroup) findViewById(R.id.radioGroupDate);
-        radioGroupPriority = (RadioGroup) findViewById(R.id.radioGroupPriority);
-
-        btnDisplay = (Button) findViewById(R.id.submit_task);
-
-        btnDisplay.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-//                // get selected Category
-//                int CatSelectedId = radioGroupCat.getCheckedRadioButtonId();
-//
-//                // find the radio button by returned id
-//                radioButtonCat = (RadioButton) findViewById(CatSelectedId);
-//
-//                // get selected Date
-//                int DateSelectedId = radioGroupCat.getCheckedRadioButtonId();
-//
-//                // find the radio button by returned id
-//                radioButtonCat = (RadioButton) findViewById(DateSelectedId);
-//
-//                // get selected Priority
-//                int PrioritySelectedId = radioGroupCat.getCheckedRadioButtonId();
-//
-//                // find the radio button by returned id
-//                radioButtonCat = (RadioButton) findViewById(PrioritySelectedId);
-
-
-            }
-
-        });
-
-    }
 
     public void save_create_edit(View view) {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    String strUID = "";
-//
-//                    JSONObject json = new JSONObject();
-//                    try {
-//                        json.put("taskID", "null");
-//                        json.put("category", cat.getText());
-//                        json.put("des", des.getText());
-//                        json.put("priority", "2");
-//                        json.put("location", location.getText());
-//                        json.put("due_date", date.getText());
-//                        json.put("assignee", "43");
-//                        json.put("action", "create");
-//                        json.put("teamID", "43");
 
-//                    } catch (JSONException e) {
-//                        strUID = "-1";
-//                    }
-//
-//
-//                    try {
-//                        String strURL = "http://pinkladystudio.com/MyTaskTeam/create_edit_task.php";
-//                        strUID = TalkToServer.PostToUrl(strURL,json.toString());
-//                    } catch (Exception ex) {
-//                        strUID = "-1";
-//                        Log.e("error creating SignIn: ", ex.toString());
-//                    }
-//
-//                    if(strUID.compareTo("-1") == 0) {
+        //todo : check if action needed is create/edit by checking how i got to this page (by clicking + floating button -> create, else -> edit)
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String strUID = "";
+
+                    //get selected priority
+                    int selectedId = radioGroupPriority.getCheckedRadioButtonId();
+                    RadioButton radioButton = (RadioButton) findViewById(selectedId);
+
+                    String currAssigneeID = null;
+                    for (int j = 0; j < m_allMembers.length(); j++) {
+                        JSONObject obj = m_allMembers.getJSONObject(j);
+                        if(obj.getString("memberName").compareTo(assignee.getSelectedItem().toString())==0){
+                            currAssigneeID = obj.getString("memberID");
+                        }
+                    }
+
+                    JSONObject json = new JSONObject();
+
+                    //edit
+                    if(!create){
+                        try {
+                            json.put("taskID", task.getString("taskID"));
+                            json.put("category", category.getSelectedItem().toString());
+                            json.put("des", des.getText());
+                            json.put("priority", "2"); //update
+                            json.put("location", location.getSelectedItem().toString());
+                            json.put("due_date", "today"); //update
+                            json.put("assignee", currAssigneeID);
+                            json.put("action", "edit");
+                            json.put("teamID", task.getString("teamID"));
+
+                        } catch (JSONException e) {
+                            strUID = "-1";
+                        }
+
+                    }else{
+                        //create
+                        try {
+                            json.put("taskID", "null");
+                            json.put("category", category.getSelectedItem().toString());
+                            json.put("des", des.getText());
+                            json.put("priority", "2"); //update
+                            json.put("location", location.getSelectedItem().toString());
+                            json.put("due_date", "today"); //update
+                            json.put("assignee", currAssigneeID);
+                            json.put("action", "create");
+                            json.put("teamID", task.getString("teamID"));
+
+                        } catch (JSONException e) {
+                            strUID = "-1";
+                        }
+                    }
+
+                    try {
+                        String strURL = "http://pinkladystudio.com/MyTaskTeam/create_edit_task.php";
+                        strUID = TalkToServer.PostToUrl(strURL,json.toString());
+                    } catch (Exception ex) {
+                        strUID = "-1";
+                        Log.e("error creating SignIn: ", ex.toString());
+                    }
+
+                    if(strUID.compareTo("-1") == 0) {
 //                        showToast("Oops! something went wrong.. please try again");
-//                    }
-//                    else
-//                    {
-//                        showToast("Logged in as user id: " + strUID);
-//
-//                        SharedPreferences prefs = getSharedPreferences("MyTaskTeam", MODE_PRIVATE);
-//                        SharedPreferences.Editor editor = prefs.edit();
-//                        editor.putString("StoredUID", strUID);
-//                        editor.putString("StoredRole", "manager");
-//                        editor.commit();
-//
-//                        //set the next activity
-//                        Intent myIntent = new Intent(MainActivity.this, ManagerMainView.class);
-//                        myIntent.putExtra("UID", strUID);
-//                        myIntent.putExtra("role", "manager");
-//                        myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        MainActivity.this.startActivity(myIntent);
-//                        finish();
-//                    }
-//
-//                } catch (Exception ex) {
-//                    Log.e("gg",ex.getMessage());
-//                }
-//            }
-//        });
-//        thread.start();
+                    }
+                    else {
+                        //set the next activity
+                        Intent myIntent = new Intent(CreateEditTask.this, ManagerMainView.class);
+                        myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        myIntent.putExtra("UID", task.getString("teamID"));
+                        myIntent.putExtra("role", "manager");
+                        CreateEditTask.this.startActivity(myIntent);
+                        finish();
+                    }
+
+                } catch (Exception ex) {
+                    Log.e("gg",ex.getMessage());
+                }
+            }
+        });
+        thread.start();
     }
 
-    void setRadioForPriopiry(String p) {
-        // set all to false
-        priority_high.setSelected(false);
-        priority_medium.setSelected(false);
-        priority_low.setSelected(false);
+    void setRadioForPriority(String p) {
+       try{
+           // set all to false
+           priority_high.setChecked(false);
+           priority_medium.setChecked(false);
+           priority_low.setChecked(false);
 
-        // set the proper one to true
-        if(p.compareTo("1")==0) {
-            // priority = low
-            priority_low.setSelected(true);
-        }
-        else if(p.compareTo("2") == 0) {
-            // priority = medium
-            priority_medium.setSelected(true);
+           // set the proper one to true
+           if(p.compareTo("1") == 0) {
+               // priority = low
+               priority_low.setChecked(true);
+           }
+           else if(p.compareTo("2") == 0) {
+               // priority = medium
+               priority_medium.setChecked(true);
 
-        }
-        else if(p.compareTo("3") == 0) {
-            // priority = high
-            priority_high.setSelected(true);
+           }
+           else if(p.compareTo("3") == 0) {
+               // priority = high
+               priority_high.setChecked(true);
 
+           }
+       }catch (Exception ex) {
+           Log.e("error", ex.toString());
+       }
+    }
+
+    void setRadioForDate(String p) {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c.getTime());
+        try{
+            // set all to false
+            date_today.setChecked(false);
+            date_tom.setChecked(false);
+            date.setChecked(false);
+
+            // set the proper one to true
+            if(p.compareTo(formattedDate) == 0) {
+                // date = today
+                date_today.setChecked(true);
+            }
+            else{
+                c.add(Calendar.DATE, 1);
+                formattedDate = df.format(c.getTime());
+                if(p.compareTo(formattedDate) == 0) {
+                    // date = tomorrow
+                    date_tom.setChecked(true);
+                }else{
+                    date.setChecked(true);
+                }
+            }
+        }catch (Exception ex) {
+            Log.e("error", ex.toString());
         }
     }
+
 }
 

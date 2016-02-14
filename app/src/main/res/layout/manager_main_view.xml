@@ -29,7 +29,6 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_check_task"
-        android:onClick=""
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

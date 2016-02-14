@@ -21,7 +21,6 @@ public class ReportTask extends AppCompatActivity {
     protected TextView assignee;
     protected TextView location;
     protected TextView dueDate;
-    protected TextView status;
     protected TextView priority;
 
     private RadioButton accept;
@@ -94,35 +93,38 @@ public class ReportTask extends AppCompatActivity {
     void setRadioForStatus(String p) {
         try {
             // set all to false
-            reject.setSelected(false);
-            accept.setSelected(false);
-            accept_waiting.setSelected(false);
-            accept_in_process.setSelected(false);
-            accept_done.setSelected(false);
+            reject.setChecked(false);
+            accept.setChecked(false);
+            accept_waiting.setChecked(false);
+            accept_in_process.setChecked(false);
+            accept_done.setChecked(false);
 
 
             // set the proper one to true
-            if(p.compareTo("4")==1) {
+            if(p.compareTo("4")==0) {
                 // rej
-                reject.setSelected(true);
+                reject.setChecked(true);
+                accept_waiting.setEnabled(false);
+                accept_in_process.setEnabled(false);
+                accept_done.setEnabled(false);
             }
             else {
                 // acc
-                accept.setSelected(true);
+                accept.setChecked(true);
 
-                if(p.compareTo("0") == 1) {
+                if(p.compareTo("0") == 0) {
                     // waiting
-                    accept_waiting.setSelected(true);
+                    accept_waiting.setChecked(true);
 
                 }
-                else if(p.compareTo("2") == 1) {
+                else if(p.compareTo("2") == 0) {
                     // in process
-                    accept_in_process.setSelected(true);
+                    accept_in_process.setChecked(true);
 
                 }
-                else if(p.compareTo("3") == 1) {
+                else if(p.compareTo("3") == 0) {
                     // done
-                    accept_done.setSelected(true);
+                    accept_done.setChecked(true);
                 }
 
             }
