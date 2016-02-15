@@ -48,6 +48,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 			view = convertView;
 		}
 
+
 		viewHolder = new ViewHolder();
 		//define the data in a task cell
 		viewHolder.text = (TextView) view.findViewById(R.id.textCategory);
@@ -58,6 +59,18 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 
 		try {
 			JSONObject obj = list.get(position);
+
+			String priority = obj.getString("priority");
+			switch(priority){
+				case "1" :
+					view.setBackgroundResource(R.color.low);
+					break;
+				case "2" :
+					view.setBackgroundResource(R.color.medium);
+					break;
+				case "3" :
+					view.setBackgroundResource(R.color.high);
+			}
 
 
 			viewHolder.text.setText(obj.getString("cat"));

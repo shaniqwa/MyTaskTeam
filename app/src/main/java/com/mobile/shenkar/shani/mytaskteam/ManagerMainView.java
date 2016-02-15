@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -22,11 +24,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class ManagerMainView extends AppCompatActivity {
     String myID;
     String myRole;
     JSONArray m_allTasks = null;
+    Spinner sort;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +70,20 @@ public class ManagerMainView extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        //set sort by spinner
+        sort = (Spinner) findViewById(R.id.sort);
+        List<String> sort_list;
+        sort_list = new ArrayList<String>();
+        sort_list.add("Priority");
+        sort_list.add("Due Date");
+
+        // Initializing an ArrayAdapter for category spinner
+        ArrayAdapter<String> sortArrayAdapter = new ArrayAdapter<String>(
+                this, R.layout.spinner_item, sort_list
+        );
+        sortArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        sort.setAdapter(sortArrayAdapter);
+
 
         //get tasks from server
         Thread thread = new Thread(new Runnable() {
@@ -90,6 +110,7 @@ public class ManagerMainView extends AppCompatActivity {
                 try {
                     //parse the result from server to json array
                     m_allTasks = new JSONArray(res);
+                    sortJsonArray(m_allTasks);
 
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
@@ -138,6 +159,7 @@ public class ManagerMainView extends AppCompatActivity {
         ArrayList<JSONObject> arrObjects = new ArrayList<JSONObject>();
         try {
             if(m_allTasks != null) {
+                sortJsonArray(m_allTasks);
                 if (i == 1) {
                     // pending
                     for (int j = 0; j < m_allTasks.length(); j++) {
@@ -164,8 +186,39 @@ public class ManagerMainView extends AppCompatActivity {
             return new ArrayList<JSONObject>();
         }
     }
-
-
+    //sort function
+    public static JSONArray sortJsonArray(JSONArray array) {
+        List<JSONObject> jsons = new ArrayList<JSONObject>();
+        for (int i = 0; i < array.length(); i++) {
+            try {
+                jsons.add(array.getJSONObject(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        Collections.sort(jsons, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject lhs, JSONObject rhs) {
+                Integer lid = null;
+                try {
+                    lid = lhs.getInt("priority");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Integer rid = null;
+                try {
+                    rid = rhs.getInt("priority");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                // Here you could parse string id to integer and then compare.
+//                Integer r = Integer.parseInt(rid);
+//                Integer l = Integer.parseInt(lid);
+                return rid.compareTo(lid);
+            }
+        });
+        return new JSONArray(jsons);
+    }
 
 
     public void AddTaskClicked(View v){

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,32 +13,48 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
-        android:layout_width="fill_parent"
+        android:layout_width="186dp"
         android:layout_height="wrap_content"
-        app:tabMode="scrollable" />
+        app:tabMode="scrollable"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="176dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/sort"
+        android:layout_gravity="right"
+        android:layout_alignTop="@+id/sliding_tabs"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/sliding_tabs" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
-        android:background="@android:color/white" />
-
-</LinearLayout>
-
+        android:background="@android:color/white"
+        android:layout_below="@+id/sliding_tabs"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_check_task"
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:clickable="true"
         android:src="@drawable/ic_action_editor_vertical_align_bottom"
         app:layout_anchor="@id/viewpager"
-        app:layout_anchorGravity="bottom|right|end"/>
-
-
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_task"
@@ -46,12 +62,17 @@
         app:backgroundTint="@color/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="90dp"
         android:clickable="true"
         android:src="@drawable/ic_action_name"
         app:layout_anchor="@id/viewpager"
-        app:layout_anchorGravity="bottom|right|end"/>
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_marginRight="30px"
+        android:layout_alignTop="@+id/fab_check_task"
+        android:layout_toLeftOf="@+id/fab_check_task"
+        android:layout_toStartOf="@+id/fab_check_task" />
+
+</RelativeLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
 

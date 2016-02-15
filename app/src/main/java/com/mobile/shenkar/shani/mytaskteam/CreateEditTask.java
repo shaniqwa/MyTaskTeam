@@ -113,7 +113,6 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
 
 //      START findViewsById
         des = (EditText) findViewById(R.id.des);
-//        currDate = (TextView) findViewById(R.id.textDATE);
         assignee = (Spinner) findViewById(R.id.assigneeSpinner);
         location = (Spinner) findViewById(R.id.location_select);
         category = (Spinner) findViewById(R.id.catSpinner);
@@ -319,11 +318,6 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
                 try {
                     String strUID = "";
 
-                    //get selected priority
-                    int selectedId = radioGroupPriority.getCheckedRadioButtonId();
-                    RadioButton radioButton = (RadioButton) findViewById(selectedId);
-
-                    System.out.print(radioButton);
                     String currAssigneeID = null;
                     for (int j = 0; j < m_allMembers.length(); j++) {
                         JSONObject obj = m_allMembers.getJSONObject(j);
