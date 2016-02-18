@@ -75,7 +75,8 @@
                 android:layout_width="158dp"
                 android:layout_height="wrap_content"
                 android:text="@string/status_reject_text"
-                android:id="@+id/reject" />
+                android:id="@+id/reject"
+                android:checked="false" />
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -124,7 +125,9 @@
             android:id="@+id/save_status_task"
             android:layout_below="@+id/done"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:onClick="save_report_task"
+            android:nestedScrollingEnabled="true" />
 
     </LinearLayout>
 </ScrollView>

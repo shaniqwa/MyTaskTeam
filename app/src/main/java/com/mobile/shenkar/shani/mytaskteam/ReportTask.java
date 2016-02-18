@@ -1,8 +1,10 @@
 package com.mobile.shenkar.shani.mytaskteam;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -28,8 +30,11 @@ public class ReportTask extends AppCompatActivity {
     private RadioButton accept_in_process;
     private RadioButton accept_done;
     private RadioButton reject;
-    private RadioGroup radioGroupStatus;
+    private RadioGroup mainRadioGroupStatus;
+    private RadioGroup acceptRadioGroupStatus;
     private Button save;
+
+    String currStatus;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +73,6 @@ public class ReportTask extends AppCompatActivity {
         accept_done = (RadioButton)findViewById(R.id.done);
 
 
-
         try {
             cat.setText(task.getString("cat"));
             des.setText(task.getString("des"));
@@ -88,6 +92,53 @@ public class ReportTask extends AppCompatActivity {
         } catch (JSONException e) {
             cat.setText("Error");
         }
+
+        // status radio group links to layout and add event listeners
+        acceptRadioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupAcceptStatus);
+        acceptRadioGroupStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId) {
+                    case R.id.waiting:
+                        accept.setChecked(true);
+                        currStatus = "1";
+                        break;
+                    case R.id.in_process:
+                        accept.setChecked(true);
+                        currStatus = "2";
+                        break;
+                    case R.id.done:
+                        accept.setChecked(true);
+                        currStatus = "3";
+                        break;
+                }
+            }
+        });
+        mainRadioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupAcceptReject);
+        mainRadioGroupStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId) {
+                    case R.id.reject:
+                        accept_waiting.setEnabled(false);
+                        accept_in_process.setEnabled(false);
+                        accept_done.setEnabled(false);
+                        currStatus = "4";
+                        break;
+                    case R.id.accept:
+                        //enable other accept status (in process/done)
+                        accept_waiting.setEnabled(true);
+                        accept_in_process.setEnabled(true);
+                        accept_done.setEnabled(true);
+                        //accept default is accept_waiting
+                        accept_waiting.setChecked(true);
+                        //set current status
+                        currStatus = "1";
+                        break;
+                }
+            }
+        });
+
     }
 
     void setRadioForStatus(String p) {
@@ -101,37 +152,80 @@ public class ReportTask extends AppCompatActivity {
 
 
             // set the proper one to true
-            if(p.compareTo("4")==0) {
-                // rej
-                reject.setChecked(true);
-                accept_waiting.setEnabled(false);
-                accept_in_process.setEnabled(false);
-                accept_done.setEnabled(false);
-            }
-            else {
-                // acc
-                accept.setChecked(true);
-
-                if(p.compareTo("0") == 0) {
-                    // waiting
+            switch (p){
+                case "0": //no reply yet
+                    accept_waiting.setEnabled(false);
+                    accept_in_process.setEnabled(false);
+                    accept_done.setEnabled(false);
+                    break;
+                case "1":   //accept - waiting
+                    accept.setChecked(true);
                     accept_waiting.setChecked(true);
-
-                }
-                else if(p.compareTo("2") == 0) {
-                    // in process
+                    break;
+                case "2": //accept - in process
+                    accept.setChecked(true);
                     accept_in_process.setChecked(true);
-
-                }
-                else if(p.compareTo("3") == 0) {
-                    // done
+                    break;
+                case "3": //accept - done
+                    accept.setChecked(true);
                     accept_done.setChecked(true);
-                }
-
+                    break;
+                case "4":  //reject
+                    reject.setChecked(true);
+                    accept_waiting.setEnabled(false);
+                    accept_in_process.setEnabled(false);
+                    accept_done.setEnabled(false);
+                    break;
             }
         }
         catch (Exception ex) {
             Log.e("error", ex.toString());
         }
+    }
 
+    public void save_report_task(View view) {
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String strUID = "";
+                    JSONObject json = new JSONObject();
+
+                        try {
+                            json.put("taskID", task.getString("taskID"));
+                            json.put("status", currStatus);
+
+                        } catch (JSONException e) {
+                            strUID = "-1";
+                        }
+
+                    try {
+                        String strURL = "http://pinkladystudio.com/MyTaskTeam/report_task_status.php";
+                        strUID = TalkToServer.PostToUrl(strURL,json.toString());
+                    } catch (Exception ex) {
+                        strUID = "-1";
+                        Log.e("error changing status: ", ex.toString());
+                    }
+
+                    if(strUID.compareTo("-1") == 0) {
+//                        showToast("Oops! something went wrong.. please try again");
+                    }
+                    else {
+                        //set the next activity
+                        Intent myIntent = new Intent(ReportTask.this, ManagerMainView.class);
+                        myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        myIntent.putExtra("UID", task.getString("assignee"));
+                        myIntent.putExtra("role", "member");
+                        ReportTask.this.startActivity(myIntent);
+                        finish();
+                    }
+
+                } catch (Exception ex) {
+                    Log.e("gg",ex.getMessage());
+                }
+            }
+        });
+        thread.start();
     }
 }
