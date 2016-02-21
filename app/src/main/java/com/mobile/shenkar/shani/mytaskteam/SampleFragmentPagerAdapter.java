@@ -36,10 +36,21 @@ public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
         return temp;
     }
 
-    public void refreshAll()
-    {
+    public void refreshAll() {
         for (PageFragment p : lst) {
             p.check();
+        }
+    }
+
+    public void sortByDate(){
+        for (PageFragment p : lst) {
+            p.sortListbyDate();
+        }
+    }
+
+    public void sortByPriority(){
+        for (PageFragment p : lst) {
+            p.sortListbyPriority();
         }
     }
 

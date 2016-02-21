@@ -109,11 +109,11 @@
             android:paddingTop="10dp" />
 
         <RadioGroup
-            android:layout_width="160dp"
+            android:layout_width="92dp"
             android:id="@+id/radioGroupAcceptReject"
             android:layout_height="wrap_content">
             <RadioButton
-                android:layout_width="158dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/status_reject_text"
                 android:id="@+id/reject"

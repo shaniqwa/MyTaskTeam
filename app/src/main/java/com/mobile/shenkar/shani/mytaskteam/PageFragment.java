@@ -15,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Shani on 12/14/15.
@@ -42,7 +44,6 @@ public class PageFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-
 
     }
 private void setClickEventOnList() {
@@ -162,6 +163,51 @@ private String getRole() {
         } catch (Exception e) {
             Log.e("error setting adapter: ", e.getMessage());
         }
+    }
+    public void sortListbyPriority(){
+        Collections.sort(arrObjects, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject lhs, JSONObject rhs) {
+                Integer lid = null;
+                try {
+                    lid = lhs.getInt("priority");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Integer rid = null;
+                try {
+                    rid = rhs.getInt("priority");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                // Here you could parse string id to integer and then compare.
+//                Integer r = Integer.parseInt(rid);
+//                Integer l = Integer.parseInt(lid);
+                return rid.compareTo(lid);
+            }
+        });
+        adapter.notifyDataSetChanged();
+    }
+    public void sortListbyDate(){
+        Collections.sort(arrObjects, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject lhs, JSONObject rhs) {
+                String lid = null;
+                try {
+                    lid = lhs.getString("dueTime");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String rid = null;
+                try {
+                    rid = rhs.getString("dueTime");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return lid.compareTo(rid);
+            }
+        });
+        adapter.notifyDataSetChanged();
     }
 
     // todo
