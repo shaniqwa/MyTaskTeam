@@ -19,9 +19,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         email = (EditText)findViewById(R.id.txtEmail);
-         pass = (EditText)findViewById(R.id.txtPass);
-         phone = (EditText)findViewById(R.id.txtPhone);
+        email = (EditText)findViewById(R.id.txtEmail);
+        pass = (EditText)findViewById(R.id.txtPass);
+        phone = (EditText)findViewById(R.id.txtPhone);
         CheckPreviousLogins();
     }
 
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
                         //set the next activity
                         //todo : go to invite member activity first to choose taem name and members. only then continue to main view
-                        Intent myIntent = new Intent(MainActivity.this, ManagerMainView.class);
+                        Intent myIntent = new Intent(MainActivity.this, InviteMembers.class);
                         myIntent.putExtra("UID", strUID);
                         myIntent.putExtra("role", "manager");
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
