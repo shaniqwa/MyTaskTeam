@@ -416,6 +416,9 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
                priority_high.setChecked(true);
 
            }
+           if(create){
+               priority_medium.setChecked(true); //default priority for new task is Normal
+           }
        }catch (Exception ex) {
            Log.e("error", ex.toString());
        }

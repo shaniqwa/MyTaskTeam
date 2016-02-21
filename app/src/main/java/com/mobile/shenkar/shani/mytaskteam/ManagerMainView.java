@@ -109,7 +109,7 @@ public class ManagerMainView extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                SortByPriority();
+//                SortByPriority();
             }
 
         });
@@ -156,7 +156,7 @@ public class ManagerMainView extends AppCompatActivity {
                     }
                     if(getMyRole().compareTo("member") == 0){
                         showToast( "You have " + newCounter + " new tasks");
-                        showNotification();
+//                        showNotification();
                         newCounter = 0 ;
                     }
                 } catch (Throwable t) {

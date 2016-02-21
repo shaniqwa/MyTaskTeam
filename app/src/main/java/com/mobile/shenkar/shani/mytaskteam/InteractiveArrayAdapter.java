@@ -70,6 +70,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 					viewHolder.priority.setText("Priority: Urgent");
 			}
 
+			//todo: set background only for members
 			if(obj.getString("new").compareTo("0")== 0 ){
 				view.setBackgroundResource(R.color.colorPrimaryDark); //todo: fade after few seconds
 			}
