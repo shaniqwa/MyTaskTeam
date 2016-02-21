@@ -3,12 +3,16 @@ package com.mobile.shenkar.shani.mytaskteam;
 /**
  * Created by Shani on 12/14/15.
  */
-
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,11 +32,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class ManagerMainView extends AppCompatActivity {
     String myID;
     String myRole;
     JSONArray m_allTasks = null;
     Spinner sort;
+    SampleFragmentPagerAdapter pageAdapter;
+    Integer newCounter = 0;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +59,6 @@ public class ManagerMainView extends AppCompatActivity {
         } else {
             myID = (String) savedInstanceState.getSerializable("UID");
         }
-        // end receives values from previous activity
 
         //set layout
         setContentView(R.layout.manager_main_view);
@@ -63,8 +72,10 @@ public class ManagerMainView extends AppCompatActivity {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        viewPager.setAdapter(new SampleFragmentPagerAdapter(getSupportFragmentManager(),
-                ManagerMainView.this));
+
+         pageAdapter = new SampleFragmentPagerAdapter(getSupportFragmentManager(),
+                ManagerMainView.this);
+        viewPager.setAdapter(pageAdapter);
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -84,7 +95,14 @@ public class ManagerMainView extends AppCompatActivity {
         sortArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         sort.setAdapter(sortArrayAdapter);
 
+        reloadData();
 
+    }
+
+
+    public void  reloadData()
+    {
+        m_allTasks = null;
         //get tasks from server
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -112,15 +130,34 @@ public class ManagerMainView extends AppCompatActivity {
                     m_allTasks = new JSONArray(res);
                     sortJsonArray(m_allTasks);
 
+                    for(int i = 0; i<m_allTasks.length();i++){
+                        JSONObject obj = m_allTasks.getJSONObject(i);
+                        if (obj.getString("new").compareTo("0") == 0) {
+                            newCounter++;
+                        }
+                    }
+                    showToast( "You have: \"" + newCounter + "\" new tasks");
+                    showNotification();
+                    Log.e("NEW TASTK", "NEW TASTKS: \" + newCounter + \"");
+                    newCounter = 0 ;
+
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
                 }
             }
         });
-        if(m_allTasks == null)
+
+        thread.start();
+
+        while (m_allTasks == null)
         {
-            thread.start();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     @Override
@@ -128,7 +165,7 @@ public class ManagerMainView extends AppCompatActivity {
         if(getMyRole().compareTo("manager") == 0) {
             menu.add(Menu.NONE, R.id.add_member, Menu.NONE, R.string.add_member_title);
         }
-        menu.add(Menu.NONE, R.id.logout, Menu.NONE,"Logout");
+        menu.add(Menu.NONE, R.id.logout, Menu.NONE, "Logout");
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -240,17 +277,32 @@ public class ManagerMainView extends AppCompatActivity {
         ManagerMainView.this.startActivity(myIntent);
         finish();
     }
-    public void showToast(final String toast) {
-        final int width = this.getWindow().getAttributes().width;
+    public void check(View v){
+        pageAdapter.refreshAll();
+    }
+
+    public void showToast(final String toast){
         runOnUiThread(new Runnable() {
             public void run() {
-                Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
-                Intent i = new Intent("android.intent.action.ALERT");
-                i.putExtra("AlertBoxText", toast);
-                i.putExtra("ParentWidth", width);
-                startActivity(i);
+                Toast.makeText(ManagerMainView.this, toast, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void showNotification() {
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, ManagerMainView.class), 0);
+        Resources r = getResources();
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(r.getString(R.string.notification_title))
+                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                .setContentTitle(r.getString(R.string.notification_title))
+                .setContentText(r.getString(R.string.notification_text))
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
     }
 
 }

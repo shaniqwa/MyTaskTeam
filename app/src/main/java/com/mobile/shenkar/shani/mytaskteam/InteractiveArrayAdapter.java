@@ -30,7 +30,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 		protected TextView text;
 		protected TextView dueDate;
 		protected TextView status;
-		protected TextView location;
+		protected TextView priority;
 	}
 
 	@Override
@@ -38,13 +38,11 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 		View view = null;
 		ViewHolder viewHolder;
 
-		if (convertView == null)
-		{
+		if (convertView == null){
 			LayoutInflater inflator = context.getLayoutInflater();
 			view = inflator.inflate(R.layout.task_cell, null);
 		}
-		else
-		{
+		else {
 			view = convertView;
 		}
 
@@ -55,7 +53,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 		viewHolder.subText = (TextView) view.findViewById(R.id.textDes);
 		viewHolder.dueDate = (TextView) view.findViewById(R.id.textDue);
 		viewHolder.status =  (TextView) view.findViewById(R.id.textStatus);
-		viewHolder.location = (TextView) view.findViewById(R.id.textLocation);
+		viewHolder.priority = (TextView) view.findViewById(R.id.textPriority);
 
 		try {
 			JSONObject obj = list.get(position);
@@ -63,20 +61,24 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 			String priority = obj.getString("priority");
 			switch(priority){
 				case "1" :
-					view.setBackgroundResource(R.color.low);
+					viewHolder.priority.setText("Priority: Low");
 					break;
 				case "2" :
-					view.setBackgroundResource(R.color.medium);
+					viewHolder.priority.setText("Priority: Normal");
 					break;
 				case "3" :
-					view.setBackgroundResource(R.color.high);
+					viewHolder.priority.setText("Priority: Urgent");
+			}
+
+			if(obj.getString("new").compareTo("0")== 0 ){
+				view.setBackgroundResource(R.color.colorPrimaryDark); //todo: fade after few seconds
 			}
 
 
 			viewHolder.text.setText(obj.getString("cat"));
 			viewHolder.subText.setText(obj.getString("des"));
 			viewHolder.dueDate.setText(obj.getString("dueTime"));
-			viewHolder.location.setText(obj.getString("location"));
+
 			String status = obj.getString("status");
 			switch (status){
 				case "0" :
@@ -85,12 +87,15 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 					break;
 				case "1" :
 					viewHolder.status.setText(context.getResources().getString(R.string.status_accept_waiting));
+					viewHolder.status.setTextColor(Color.parseColor("#44b675"));
 					break;
 				case "2" :
 					viewHolder.status.setText(context.getResources().getString(R.string.status_accept_in_process));
+					viewHolder.status.setTextColor(Color.parseColor("#44b675"));
 					break;
 				case "3" :
 					viewHolder.status.setText(context.getResources().getString(R.string.status_accept_done));
+					viewHolder.status.setTextColor(Color.parseColor("#44b675"));
 					break;
 				case "4" :
 					viewHolder.status.setText(context.getResources().getString(R.string.status_reject));

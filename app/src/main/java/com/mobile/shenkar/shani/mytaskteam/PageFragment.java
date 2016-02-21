@@ -26,6 +26,8 @@ public class PageFragment extends ListFragment {
     protected ArrayList<JSONObject> arrObjects = null;
     public static final String ARG_PAGE = "ARG_PAGE";
 
+    InteractiveArrayAdapter adapter = null;
+
     private int mPage;
 
     public static PageFragment newInstance(int page) {
@@ -86,11 +88,10 @@ private String getRole() {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
 
-
-        InteractiveArrayAdapter adapter = null;
         try {
             MylistView = (ListView) getView().findViewById (R.id.list);
             setClickEventOnList();
+
             Thread FillTasksThread = new Thread(new Runnable(){
                 @Override
                 public void run() {
@@ -98,7 +99,6 @@ private String getRole() {
                     arrObjects = t.getJSONTaskForPageNumber(mPage);
                 }
             });
-
             Thread.sleep(500);
             FillTasksThread.start();
 
@@ -127,6 +127,40 @@ private String getRole() {
         catch (Exception ex)
         {
             Log.e("error: ",ex.getMessage());
+        }
+    }
+    public void check(){
+        arrObjects.clear();
+        arrObjects = null;
+        adapter.clear();
+
+        Thread FillTasksThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+
+                ManagerMainView t = (ManagerMainView)getActivity();
+                t.reloadData();
+                arrObjects = t.getJSONTaskForPageNumber(mPage);
+            }
+        });
+        FillTasksThread.start();
+
+        try {
+
+            while(arrObjects == null){
+                // wait to fill
+                Thread.sleep(500);
+            }
+            if (arrObjects != null){
+
+                for (JSONObject object : arrObjects) {
+
+                    adapter.insert(object, adapter.getCount());
+                }
+            }
+            adapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            Log.e("error setting adapter: ", e.getMessage());
         }
     }
 

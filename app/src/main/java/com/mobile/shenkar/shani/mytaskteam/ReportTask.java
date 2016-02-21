@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -206,12 +207,14 @@ public class ReportTask extends AppCompatActivity {
                     } catch (Exception ex) {
                         strUID = "-1";
                         Log.e("error changing status: ", ex.toString());
+                        showToast("Error Saving Task Status: Please try again");
                     }
 
                     if(strUID.compareTo("-1") == 0) {
-//                        showToast("Oops! something went wrong.. please try again");
+                        showToast("Oops! something went wrong.. please try again");
                     }
                     else {
+                        showToast( "You have: \"" + currStatus + "\" new tasks" );
                         //set the next activity
                         Intent myIntent = new Intent(ReportTask.this, ManagerMainView.class);
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -227,5 +230,12 @@ public class ReportTask extends AppCompatActivity {
             }
         });
         thread.start();
+    }
+    public void showToast(final String toast){
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(ReportTask.this, toast, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

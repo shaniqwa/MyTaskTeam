@@ -43,8 +43,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="location"
-        android:id="@+id/textLocation"
+        android:text="priority"
+        android:id="@+id/textPriority"
         android:layout_below="@+id/textDes"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

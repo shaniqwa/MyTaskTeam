@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -372,9 +373,10 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
                     }
 
                     if(strUID.compareTo("-1") == 0) {
-//                        showToast("Oops! something went wrong.. please try again");
+                        showToast("Oops! something went wrong.. please try again");
                     }
                     else {
+                        showToast("New Task created and sent");
                         //set the next activity
                         Intent myIntent = new Intent(CreateEditTask.this, ManagerMainView.class);
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -463,6 +465,14 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
         if(view == dateSelection) {
             dateSelectionPickerDialog.show();
         }
+    }
+    public void showToast(final String toast){
+        runOnUiThread(new Runnable() {
+            public void run()
+            {
+                Toast.makeText(CreateEditTask.this, toast, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
 
