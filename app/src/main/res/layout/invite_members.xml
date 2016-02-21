@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/multiAutoCompleteTextView"
-        android:layout_below="@+id/editText"
+        android:layout_below="@+id/textView17"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -28,10 +28,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Enter Team Name"
         android:ems="10"
         android:id="@+id/editText"
+        android:layout_below="@+id/textView16"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Team Name"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView16" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Invite Members"
+        android:id="@+id/textView17"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_below="@+id/multiAutoCompleteTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="31dp"
+        android:layout_above="@+id/button3" />
+
 
 </RelativeLayout>

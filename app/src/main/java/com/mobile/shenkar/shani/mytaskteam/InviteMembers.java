@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 
 import org.json.JSONArray;
@@ -19,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Shani on 1/18/16.
@@ -28,6 +30,9 @@ public class InviteMembers extends AppCompatActivity {
     String myID;
     String myRole;
     Button send;
+    JSONArray m_allMembers = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +70,6 @@ public class InviteMembers extends AppCompatActivity {
 
         mt.setThreshold(1);
         mt.setAdapter(adp);
-
-
-
-
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +79,7 @@ public class InviteMembers extends AppCompatActivity {
                 moveNext();
             }
         });
+        GetMembersList();
     }
 
     private void sendInviteJsonToServer(final JSONObject json) {
@@ -87,10 +89,10 @@ public class InviteMembers extends AppCompatActivity {
                 try {
                     String strURL = "http://pinkladystudio.com/MyTaskTeam/invite_members.php";
                     String ans = TalkToServer.PostToUrl(strURL, json.toString());
-                    Log.i("sendInviteJsonToServer: ", ans);
+                    Log.i("sendInviteJsonToServer:", ans);
                 } catch (Exception ex) {
 
-                    Log.e("sendInviteJsonToServer: ", ex.toString());
+                    Log.e("sendInviteJsonToServer:", ex.toString());
                 }
             }
         });
@@ -166,14 +168,14 @@ public class InviteMembers extends AppCompatActivity {
                     String emlAddr = cur.getString(3);
                     // cont = new JSONObject();
                     // cont.put("fullname", name.toLowerCase());
-//					cont.put("phone", phoneNumber);
+//             cont.put("phone", phoneNumber);
                     // cont.put("email", emlAddr.toLowerCase());
                     // arr.put(cont);
                     arr.add(emlAddr.toLowerCase());
-//				// keep unique only
-//				if (emlRecsHS.add(emlAddr.toLowerCase())) {
-//					emlRecs.add(emlAddr);
-//				}
+//          // keep unique only
+//          if (emlRecsHS.add(emlAddr.toLowerCase())) {
+//             emlRecs.add(emlAddr);
+//          }
                 } catch (Exception ex) {
                     // move next!
                 }
@@ -182,6 +184,54 @@ public class InviteMembers extends AppCompatActivity {
 
         cur.close();
         return arr;
+    }
+    private void GetMembersList() {
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                JSONObject json_req = new JSONObject();
+                String res = "";
+                try {
+//                    json_req.put("teamID", task.getString("teamID"));
+                    json_req.put("teamID", myID);
+                } catch (JSONException e) {
+                    res = "-1";
+                }
+
+                try {
+                    String strURL = "http://pinkladystudio.com/MyTaskTeam/get_members.php";
+                    res = TalkToServer.PostToUrl(strURL, json_req.toString());
+                } catch (Exception ex) {
+                    res = "-1";
+                    Log.e("error post to server: ", ex.toString());
+                }
+
+
+                try {
+                    //parse the result from server to json array
+                    m_allMembers = new JSONArray(res);
+
+                    List<String> memberlist ;
+                    memberlist= new ArrayList<String>();
+                    ArrayAdapter<String> memberAdapter;
+                    memberAdapter = new ArrayAdapter<String>(InviteMembers.this, android.R.layout.simple_list_item_1, memberlist);
+                    ListView MembersListView = (ListView)findViewById (R.id.listView);
+                    MembersListView.setAdapter(memberAdapter);
+
+
+                    for (int i=0; i<m_allMembers.length();i++){
+                        JSONObject obj = m_allMembers.getJSONObject(i);
+                        memberlist.add(obj.getString("memberName"));
+                    }
+                    memberAdapter.notifyDataSetChanged();
+
+                } catch (Throwable t) {
+                    Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
+                }
+            }//end thread
+        });
+        thread.start();
     }
 
 }
