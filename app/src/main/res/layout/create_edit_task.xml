@@ -63,7 +63,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium"
+            android:text="Normal"
             android:id="@+id/radioMedium"
             android:checked="false"
             android:layout_below="@+id/textView6"
@@ -72,7 +72,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="High"
+            android:text="Urgent"
             android:id="@+id/radioHigh"
             android:checked="false"
             android:layout_marginRight="28dp"

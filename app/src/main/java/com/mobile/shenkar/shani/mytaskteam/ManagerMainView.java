@@ -136,11 +136,12 @@ public class ManagerMainView extends AppCompatActivity {
                             newCounter++;
                         }
                     }
-                    showToast( "You have: \"" + newCounter + "\" new tasks");
-                    showNotification();
-                    Log.e("NEW TASTK", "NEW TASTKS: \" + newCounter + \"");
-                    newCounter = 0 ;
-
+                    if(getMyRole() == "member"){
+                        showToast( "You have: \"" + newCounter + "\" new tasks");
+                        showNotification();
+                        Log.e("NEW TASTK", "NEW TASTKS: \" + newCounter + \"");
+                        newCounter = 0 ;
+                    }
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
                 }
