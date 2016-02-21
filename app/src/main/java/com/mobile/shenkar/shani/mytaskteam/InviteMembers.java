@@ -31,6 +31,8 @@ public class InviteMembers extends AppCompatActivity {
     String myRole;
     Button send;
     JSONArray m_allMembers = null;
+    List<String> memberlist ;
+    ArrayAdapter<String> memberAdapter;
 
 
     @Override
@@ -59,8 +61,6 @@ public class InviteMembers extends AppCompatActivity {
         String[] str = new String[lst.size()];
         str = lst.toArray(str);
 
-//        String[] str= (String[]) .toArray();
-
         final MultiAutoCompleteTextView mt=(MultiAutoCompleteTextView) findViewById(R.id.multiAutoCompleteTextView);
 
         mt.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
@@ -79,7 +79,17 @@ public class InviteMembers extends AppCompatActivity {
                 moveNext();
             }
         });
+
+        //set a list of current members
+
+        memberlist= new ArrayList<>();
+        ListView MembersListView = (ListView)findViewById (R.id.listView);
+        memberAdapter = new ArrayAdapter<>(InviteMembers.this, android.R.layout.simple_list_item_1, memberlist);
+        MembersListView.setAdapter(memberAdapter);
+
         GetMembersList();
+
+        memberAdapter.notifyDataSetChanged();
     }
 
     private void sendInviteJsonToServer(final JSONObject json) {
@@ -193,7 +203,6 @@ public class InviteMembers extends AppCompatActivity {
                 JSONObject json_req = new JSONObject();
                 String res = "";
                 try {
-//                    json_req.put("teamID", task.getString("teamID"));
                     json_req.put("teamID", myID);
                 } catch (JSONException e) {
                     res = "-1";
@@ -212,19 +221,11 @@ public class InviteMembers extends AppCompatActivity {
                     //parse the result from server to json array
                     m_allMembers = new JSONArray(res);
 
-                    List<String> memberlist ;
-                    memberlist= new ArrayList<String>();
-                    ArrayAdapter<String> memberAdapter;
-                    memberAdapter = new ArrayAdapter<String>(InviteMembers.this, android.R.layout.simple_list_item_1, memberlist);
-                    ListView MembersListView = (ListView)findViewById (R.id.listView);
-                    MembersListView.setAdapter(memberAdapter);
-
-
                     for (int i=0; i<m_allMembers.length();i++){
                         JSONObject obj = m_allMembers.getJSONObject(i);
                         memberlist.add(obj.getString("memberName"));
                     }
-                    memberAdapter.notifyDataSetChanged();
+
 
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");

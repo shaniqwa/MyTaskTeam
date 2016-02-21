@@ -58,11 +58,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
+        android:layout_below="@+id/textView18"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/button3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Current Team Members"
+        android:id="@+id/textView18"
         android:layout_below="@+id/multiAutoCompleteTextView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="31dp"
-        android:layout_above="@+id/button3" />
+        android:paddingTop="20dp" />
 
 
 </RelativeLayout>
