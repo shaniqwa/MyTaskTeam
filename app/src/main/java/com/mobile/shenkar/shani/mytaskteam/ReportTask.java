@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -33,7 +32,9 @@ public class ReportTask extends AppCompatActivity {
     private RadioButton reject;
     private RadioGroup mainRadioGroupStatus;
     private RadioGroup acceptRadioGroupStatus;
-    private Button save;
+
+
+
 
     String currStatus;
 
@@ -72,6 +73,7 @@ public class ReportTask extends AppCompatActivity {
         accept_waiting = (RadioButton)findViewById(R.id.waiting);
         accept_in_process = (RadioButton)findViewById(R.id.in_process);
         accept_done = (RadioButton)findViewById(R.id.done);
+
 
 
         try {
@@ -115,6 +117,7 @@ public class ReportTask extends AppCompatActivity {
                 }
             }
         });
+
         mainRadioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupAcceptReject);
         mainRadioGroupStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

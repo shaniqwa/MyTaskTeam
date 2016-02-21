@@ -3,6 +3,7 @@ package com.mobile.shenkar.shani.mytaskteam;
 /**
  * Created by Shani on 12/14/15.
  */
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -28,8 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @SuppressWarnings("ALL")
@@ -94,14 +94,32 @@ public class ManagerMainView extends AppCompatActivity {
         );
         sortArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         sort.setAdapter(sortArrayAdapter);
+        sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                switch (position){
+                    case 0:
+                        SortByPriority();
+                        break;
+                    case 1:
+                        SortByDate();
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                SortByPriority();
+            }
+
+        });
 
         reloadData();
 
     }
 
 
-    public void  reloadData()
-    {
+    public void  reloadData() {
         m_allTasks = null;
         //get tasks from server
         Thread thread = new Thread(new Runnable() {
@@ -128,7 +146,7 @@ public class ManagerMainView extends AppCompatActivity {
                 try {
                     //parse the result from server to json array
                     m_allTasks = new JSONArray(res);
-                    sortJsonArray(m_allTasks);
+                    pageAdapter.refreshAll();
 
                     for(int i = 0; i<m_allTasks.length();i++){
                         JSONObject obj = m_allTasks.getJSONObject(i);
@@ -136,10 +154,9 @@ public class ManagerMainView extends AppCompatActivity {
                             newCounter++;
                         }
                     }
-                    if(getMyRole() == "member"){
-                        showToast( "You have: \"" + newCounter + "\" new tasks");
+                    if(getMyRole().compareTo("member") == 0){
+                        showToast( "You have " + newCounter + " new tasks");
                         showNotification();
-                        Log.e("NEW TASTK", "NEW TASTKS: \" + newCounter + \"");
                         newCounter = 0 ;
                     }
                 } catch (Throwable t) {
@@ -184,20 +201,17 @@ public class ManagerMainView extends AppCompatActivity {
         }
     }
 
-    public String getMyRole()
-    {
+    public String getMyRole() {
         if (myRole.isEmpty()) {
             this.myRole = "manager";
         }
         return this.myRole;
     }
 
-    public ArrayList<JSONObject> getJSONTaskForPageNumber(int i)
-    {
+    public ArrayList<JSONObject> getJSONTaskForPageNumber(int i) {
         ArrayList<JSONObject> arrObjects = new ArrayList<JSONObject>();
         try {
             if(m_allTasks != null) {
-                sortJsonArray(m_allTasks);
                 if (i == 1) {
                     // pending
                     for (int j = 0; j < m_allTasks.length(); j++) {
@@ -224,39 +238,7 @@ public class ManagerMainView extends AppCompatActivity {
             return new ArrayList<JSONObject>();
         }
     }
-    //sort function
-    public static JSONArray sortJsonArray(JSONArray array) {
-        List<JSONObject> jsons = new ArrayList<JSONObject>();
-        for (int i = 0; i < array.length(); i++) {
-            try {
-                jsons.add(array.getJSONObject(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        Collections.sort(jsons, new Comparator<JSONObject>() {
-            @Override
-            public int compare(JSONObject lhs, JSONObject rhs) {
-                Integer lid = null;
-                try {
-                    lid = lhs.getInt("priority");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Integer rid = null;
-                try {
-                    rid = rhs.getInt("priority");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                // Here you could parse string id to integer and then compare.
-//                Integer r = Integer.parseInt(rid);
-//                Integer l = Integer.parseInt(lid);
-                return rid.compareTo(lid);
-            }
-        });
-        return new JSONArray(jsons);
-    }
+
 
 
     public void AddTaskClicked(View v){
@@ -266,7 +248,15 @@ public class ManagerMainView extends AppCompatActivity {
     }
     public void AddMemberClicked(){
         Intent myIntent = new Intent(ManagerMainView.this, InviteMembers.class);
+        myIntent.putExtra("UID", myID);
         ManagerMainView.this.startActivity(myIntent);
+    }
+    public void SortByDate(){
+        pageAdapter.sortByDate();
+    }
+
+    public void SortByPriority(){
+        pageAdapter.sortByPriority();
     }
 
     public void Logout(){
