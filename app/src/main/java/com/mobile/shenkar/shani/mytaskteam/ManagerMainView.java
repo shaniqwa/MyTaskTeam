@@ -146,19 +146,8 @@ public class ManagerMainView extends AppCompatActivity {
                 try {
                     //parse the result from server to json array
                     m_allTasks = new JSONArray(res);
-                    pageAdapter.refreshAll();
 
-                    for(int i = 0; i<m_allTasks.length();i++){
-                        JSONObject obj = m_allTasks.getJSONObject(i);
-                        if (obj.getString("new").compareTo("0") == 0) {
-                            newCounter++;
-                        }
-                    }
-                    if(getMyRole().compareTo("member") == 0){
-                        showToast( "You have " + newCounter + " new tasks");
-//                        showNotification();
-                        newCounter = 0 ;
-                    }
+
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
                 }
@@ -202,8 +191,14 @@ public class ManagerMainView extends AppCompatActivity {
     }
 
     public String getMyRole() {
-        if (myRole.isEmpty()) {
-            this.myRole = "manager";
+        try {
+            if (myRole.isEmpty()) {
+                this.myRole = "manager";
+            }
+        }
+        catch(Exception ex)
+        {
+            this.myRole = "member";
         }
         return this.myRole;
     }

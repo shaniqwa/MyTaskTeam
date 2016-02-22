@@ -153,13 +153,27 @@ private String getRole() {
                 Thread.sleep(500);
             }
             if (arrObjects != null){
-
+                int newCounter = 0;
                 for (JSONObject object : arrObjects) {
 
                     adapter.insert(object, adapter.getCount());
+                    if (object.getString("new").compareTo("0") == 0) {
+                        newCounter++;
+                    }
+                }
+
+                if ((getRole().compareTo("member") == 0) && (mPage == 1)){
+                    ManagerMainView t = (ManagerMainView)getActivity();
+                    t.showToast( "You have " + newCounter + " new tasks");
+//                        showNotification();
+                    newCounter = 0 ;
                 }
             }
             adapter.notifyDataSetChanged();
+
+
+
+
         } catch (Exception e) {
             Log.e("error setting adapter: ", e.getMessage());
         }
