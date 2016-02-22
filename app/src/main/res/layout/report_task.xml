@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:text="Accept"
                 android:id="@+id/accept"
-                android:checked="true" />
+                android:checked="false" />
 
         </RadioGroup>
 
@@ -140,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/status_accept_waiting_text"
                 android:id="@+id/waiting"
-                android:checked="true" />
+                android:checked="false" />
 
             <RadioButton
                 android:layout_width="wrap_content"

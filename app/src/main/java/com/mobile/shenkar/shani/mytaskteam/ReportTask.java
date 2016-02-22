@@ -74,51 +74,51 @@ public class ReportTask extends AppCompatActivity {
         accept_in_process = (RadioButton)findViewById(R.id.in_process);
         accept_done = (RadioButton)findViewById(R.id.done);
 
+        mainRadioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupAcceptReject);
+        acceptRadioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupAcceptStatus);
 
 
         try {
+            //set task information
             cat.setText(task.getString("cat"));
             des.setText(task.getString("des"));
             location.setText(task.getString("location"));
-            assignee.setText(task.getString("assignee"));
+            assignee.setText(task.getString("memberName"));
 
             dueDate.setText(task.getString("dueTime"));
 
+            //set priority text
             if(task.getString("priority").compareTo("1") == 0 ){
                 priority.setText("Low");
             }else if (task.getString("priority").compareTo("2") == 0 ){
-                priority.setText("Med");
+                priority.setText("Normal");
             }else if (task.getString("priority").compareTo("3") == 0){
-                priority.setText("High");
+                priority.setText("Urgent");
             }
+            //set status
             setRadioForStatus(task.getString("status"));
         } catch (JSONException e) {
             cat.setText("Error");
         }
 
-        // status radio group links to layout and add event listeners
-        acceptRadioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupAcceptStatus);
+//         status radio group links to layout and add event listeners
         acceptRadioGroupStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch(checkedId) {
                     case R.id.waiting:
-                        accept.setChecked(true);
                         currStatus = "1";
                         break;
                     case R.id.in_process:
-                        accept.setChecked(true);
                         currStatus = "2";
                         break;
                     case R.id.done:
-                        accept.setChecked(true);
                         currStatus = "3";
                         break;
                 }
             }
         });
 
-        mainRadioGroupStatus = (RadioGroup) findViewById(R.id.radioGroupAcceptReject);
         mainRadioGroupStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -134,17 +134,17 @@ public class ReportTask extends AppCompatActivity {
                         accept_waiting.setEnabled(true);
                         accept_in_process.setEnabled(true);
                         accept_done.setEnabled(true);
-                        //accept default is accept_waiting
                         accept_waiting.setChecked(true);
-                        //set current status
                         currStatus = "1";
                         break;
                 }
             }
         });
 
-    }
+    } // oncreacte
 
+
+    //set the correct radio buttons according to current status
     void setRadioForStatus(String p) {
         try {
             // set all to false
@@ -154,32 +154,45 @@ public class ReportTask extends AppCompatActivity {
             accept_in_process.setChecked(false);
             accept_done.setChecked(false);
 
-
             // set the proper one to true
             switch (p){
                 case "0": //no reply yet
+                {
                     accept_waiting.setEnabled(false);
                     accept_in_process.setEnabled(false);
                     accept_done.setEnabled(false);
                     break;
+                }
                 case "1":   //accept - waiting
+                {
                     accept.setChecked(true);
                     accept_waiting.setChecked(true);
                     break;
+                }
                 case "2": //accept - in process
+                {
                     accept.setChecked(true);
                     accept_in_process.setChecked(true);
                     break;
+                }
                 case "3": //accept - done
+                {
                     accept.setChecked(true);
                     accept_done.setChecked(true);
                     break;
+                }
                 case "4":  //reject
+                {
                     reject.setChecked(true);
                     accept_waiting.setEnabled(false);
                     accept_in_process.setEnabled(false);
                     accept_done.setEnabled(false);
                     break;
+                }
+                default:
+                {
+                    break;
+                }
             }
         }
         catch (Exception ex) {
@@ -217,7 +230,7 @@ public class ReportTask extends AppCompatActivity {
                         showToast("Oops! something went wrong.. please try again");
                     }
                     else {
-                        showToast( "You have: \"" + currStatus + "\" new tasks" );
+                        showToast( "Task: " + task.getString("des") + " status has been updated" );
                         //set the next activity
                         Intent myIntent = new Intent(ReportTask.this, ManagerMainView.class);
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
