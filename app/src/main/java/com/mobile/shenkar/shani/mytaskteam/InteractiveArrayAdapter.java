@@ -18,11 +18,13 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 
 	private final List<JSONObject> list;
 	private final Activity context;
+	boolean[] arrBgcolor;
 
 	public InteractiveArrayAdapter(Activity context, List<JSONObject> list) {
 		super(context, R.layout.task_cell, list);
 		this.context = context;
 		this.list = list;
+		arrBgcolor = new boolean[list.size()];
 	}
 
 	static class ViewHolder {
@@ -70,16 +72,23 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 					viewHolder.priority.setText("Priority: Urgent");
 			}
 
-			//todo: set background only for members
-			if(obj.getString("new").compareTo("0")== 0 ){
-				view.setBackgroundResource(R.color.colorPrimaryDark); //todo: fade after few seconds
+
+			// set new tasks background to yellow -  only for members! managers have no need for this kind of notification
+			// because they are the ones who create all the tasks.. therefor they cannot receive new tasks.
+			resetArrbg();
+			arrBgcolor[position] = true;
+			if ((arrBgcolor[position]) && (obj.getString("new").compareTo("0")== 0) && (((ManagerMainView)context).getMyRole().compareTo("member")==0)) {
+				view.setBackgroundResource(R.color.colorPrimaryDark);
+			} else {
+				view.setBackgroundResource(R.color.white);
 			}
 
-
+			//set text for other task information fields
 			viewHolder.text.setText(obj.getString("cat"));
 			viewHolder.subText.setText(obj.getString("des"));
 			viewHolder.dueDate.setText(obj.getString("dueTime"));
 
+			//set status icon
 			String status = obj.getString("status");
 			switch (status){
 				case "0" :
@@ -111,5 +120,12 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 
 		return view;
 	}
+
+	private void resetArrbg() {
+		for (int i = 0; i < arrBgcolor.length; i++) {
+			arrBgcolor[i] = false;
+		}
+	}
+
 
 }
