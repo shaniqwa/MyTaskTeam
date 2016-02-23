@@ -81,7 +81,6 @@ public class InviteMembers extends AppCompatActivity {
         });
 
         //set a list of current members
-
         memberlist= new ArrayList<>();
         ListView MembersListView = (ListView)findViewById (R.id.listView);
         memberAdapter = new ArrayAdapter<>(InviteMembers.this, android.R.layout.simple_list_item_1, memberlist);
@@ -89,7 +88,7 @@ public class InviteMembers extends AppCompatActivity {
 
         GetMembersList();
 
-        memberAdapter.notifyDataSetChanged();
+
     }
 
     private void sendInviteJsonToServer(final JSONObject json) {
@@ -110,9 +109,7 @@ public class InviteMembers extends AppCompatActivity {
         thread.start();
     }
 
-    private JSONObject getJSONForEmailArray(String[] p_arrStr)
-    {
-
+    private JSONObject getJSONForEmailArray(String[] p_arrStr) {
         JSONObject json = new JSONObject();
         try {
             json.put("teamID", myID);
@@ -226,7 +223,7 @@ public class InviteMembers extends AppCompatActivity {
                         memberlist.add(obj.getString("memberName"));
                     }
 
-
+                    memberAdapter.notifyDataSetChanged();
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
                 }

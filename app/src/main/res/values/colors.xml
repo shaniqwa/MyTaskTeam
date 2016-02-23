@@ -6,5 +6,6 @@
     <color name="low">#bef3df</color>
     <color name="medium">#ecd4a4</color>
     <color name="high">#f0ada5</color>
+    <color name="white">#fff</color>
 
 </resources>
