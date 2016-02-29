@@ -39,6 +39,7 @@ public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
     public void refreshAll() {
         for (PageFragment p : lst) {
             p.check();
+
         }
     }
 
