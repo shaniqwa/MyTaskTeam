@@ -70,13 +70,22 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         //end drawer
+
+        //set logo befor title
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setLogo(R.drawable.ic_action_image);
+//        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         //floating action button add task - visible only to manager
         FloatingActionButton floating = (FloatingActionButton)findViewById(R.id.fab_add_task);
@@ -179,7 +188,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
             }
         }
     }
-    
+
 
     public String getMyRole() {
         try {
