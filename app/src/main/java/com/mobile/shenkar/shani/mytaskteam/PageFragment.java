@@ -2,6 +2,7 @@ package com.mobile.shenkar.shani.mytaskteam;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -46,38 +47,39 @@ public class PageFragment extends ListFragment {
         mPage = getArguments().getInt(ARG_PAGE);
 
     }
-private void setClickEventOnList() {
-    MylistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            try {
-                JSONObject obj = arrObjects.get(position);
-                Log.i("Clicked:",obj.getString("des"));
+    private void setClickEventOnList() {
+        MylistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                try {
+                    JSONObject obj = arrObjects.get(position);
+                    Log.i("Clicked:",obj.getString("des"));
 
-                Intent intent = null;
-                if(getRole().compareTo("manager") == 0) {
-                    intent = new Intent(getActivity(), CreateEditTask.class);
-                }
-                else{
-                     intent = new Intent(getActivity(), ReportTask.class);
-                }
-                if(intent != null) {
-                    intent.putExtra("task_json", obj.toString());
-                    getActivity().startActivity(intent);
-                }
+                    Intent intent = null;
+                    if(getRole().compareTo("manager") == 0) {
+                        intent = new Intent(getActivity(), CreateEditTask.class);
+                    }
+                    else{
+                         intent = new Intent(getActivity(), ReportTask.class);
+                    }
+                    if(intent != null) {
+                        intent.putExtra("task_json", obj.toString());
+                        getActivity().startActivity(intent);
+                    }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
+        });
+    }
 
-        }
-    });
-}
-private String getRole() {
-    ManagerMainView t = (ManagerMainView)getActivity();
-    return t.myRole;
-}
+    private String getRole() {
+        ManagerMainView t = (ManagerMainView)getActivity();
+        return t.myRole;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -147,16 +149,31 @@ private String getRole() {
         FillTasksThread.start();
 
         try {
-
             while(arrObjects == null){
                 // wait to fill
                 Thread.sleep(500);
             }
             if (arrObjects != null){
-
+                int newCounter = 0;
                 for (JSONObject object : arrObjects) {
-
                     adapter.insert(object, adapter.getCount());
+                    if (object.getString("new").compareTo("0") == 0) {
+                        newCounter++;
+                    }
+                }
+
+                if ((getRole().compareTo("member") == 0) && (mPage == 1)){
+                    ManagerMainView t = (ManagerMainView)getActivity();
+                    t.showToast( "You have " + newCounter + " new tasks");
+//                        showNotification();
+
+                    //if there are no new tasks set all list background color back to white
+                    if(newCounter==0){
+                        for (int i = 0; i < MylistView.getChildCount(); i++) {
+                            View listItem = MylistView.getChildAt(i);
+                            listItem.setBackgroundColor(Color.WHITE);
+                        }
+                    }
                 }
             }
             adapter.notifyDataSetChanged();
@@ -164,6 +181,7 @@ private String getRole() {
             Log.e("error setting adapter: ", e.getMessage());
         }
     }
+
     public void sortListbyPriority(){
         Collections.sort(arrObjects, new Comparator<JSONObject>() {
             @Override
@@ -180,14 +198,12 @@ private String getRole() {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                // Here you could parse string id to integer and then compare.
-//                Integer r = Integer.parseInt(rid);
-//                Integer l = Integer.parseInt(lid);
                 return rid.compareTo(lid);
             }
         });
         adapter.notifyDataSetChanged();
     }
+
     public void sortListbyDate(){
         Collections.sort(arrObjects, new Comparator<JSONObject>() {
             @Override
@@ -209,8 +225,4 @@ private String getRole() {
         });
         adapter.notifyDataSetChanged();
     }
-
-    // todo
-    // get onclick and create intent with JSONObject from arrObjects
-
 }

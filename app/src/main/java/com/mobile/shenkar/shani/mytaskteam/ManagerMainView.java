@@ -42,7 +42,6 @@ public class ManagerMainView extends AppCompatActivity {
     Integer newCounter = 0;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +71,6 @@ public class ManagerMainView extends AppCompatActivity {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-
          pageAdapter = new SampleFragmentPagerAdapter(getSupportFragmentManager(),
                 ManagerMainView.this);
         viewPager.setAdapter(pageAdapter);
@@ -88,7 +86,7 @@ public class ManagerMainView extends AppCompatActivity {
         sort_list.add("Priority");
         sort_list.add("Due Date");
 
-        // Initializing an ArrayAdapter for category spinner
+        // Initializing an ArrayAdapter for "sort by" spinner
         ArrayAdapter<String> sortArrayAdapter = new ArrayAdapter<String>(
                 this, R.layout.spinner_item, sort_list
         );
@@ -99,25 +97,23 @@ public class ManagerMainView extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 switch (position){
                     case 0:
-                        SortByPriority();
+                        SortByPriority(selectedItemView);
                         break;
                     case 1:
-                        SortByDate();
+                        SortByDate(selectedItemView);
                         break;
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-//                SortByPriority();
+                SortByPriority(parentView);
             }
-
         });
 
+        //first load of the data from server
         reloadData();
-
     }
-
 
     public void  reloadData() {
         m_allTasks = null;
@@ -146,19 +142,8 @@ public class ManagerMainView extends AppCompatActivity {
                 try {
                     //parse the result from server to json array
                     m_allTasks = new JSONArray(res);
-                    pageAdapter.refreshAll();
 
-                    for(int i = 0; i<m_allTasks.length();i++){
-                        JSONObject obj = m_allTasks.getJSONObject(i);
-                        if (obj.getString("new").compareTo("0") == 0) {
-                            newCounter++;
-                        }
-                    }
-                    if(getMyRole().compareTo("member") == 0){
-                        showToast( "You have " + newCounter + " new tasks");
-//                        showNotification();
-                        newCounter = 0 ;
-                    }
+
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
                 }
@@ -175,7 +160,6 @@ public class ManagerMainView extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
     }
 
     @Override
@@ -202,8 +186,14 @@ public class ManagerMainView extends AppCompatActivity {
     }
 
     public String getMyRole() {
-        if (myRole.isEmpty()) {
-            this.myRole = "manager";
+        try {
+            if (myRole.isEmpty()) {
+                this.myRole = "manager";
+            }
+        }
+        catch(Exception ex)
+        {
+            this.myRole = "member";
         }
         return this.myRole;
     }
@@ -251,13 +241,6 @@ public class ManagerMainView extends AppCompatActivity {
         myIntent.putExtra("UID", myID);
         ManagerMainView.this.startActivity(myIntent);
     }
-    public void SortByDate(){
-        pageAdapter.sortByDate();
-    }
-
-    public void SortByPriority(){
-        pageAdapter.sortByPriority();
-    }
 
     public void Logout(){
         //clear my data
@@ -270,6 +253,12 @@ public class ManagerMainView extends AppCompatActivity {
     }
     public void check(View v){
         pageAdapter.refreshAll();
+    }
+    public void SortByDate(View v){
+        pageAdapter.sortByDate();
+    }
+    public void SortByPriority(View v){
+        pageAdapter.sortByPriority();
     }
 
     public void showToast(final String toast){
