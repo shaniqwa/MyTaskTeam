@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
@@ -66,7 +65,7 @@ public class imageHelper {
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
 
-        Log.e("LOOK", imageEncoded);
+//        Log.e("LOOK", imageEncoded);
         return imageEncoded;
     }
 
