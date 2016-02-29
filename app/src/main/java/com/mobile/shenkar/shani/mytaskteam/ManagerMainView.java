@@ -12,12 +12,16 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("ALL")
-public class ManagerMainView extends AppCompatActivity {
+public class ManagerMainView extends ActionBarActivity implements NavigationView.OnNavigationItemSelectedListener{
     String myID;
     String myRole;
     JSONArray m_allTasks = null;
@@ -45,6 +49,7 @@ public class ManagerMainView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.mtt_activity_main);
 
         // receives values from previous activity
         if (savedInstanceState == null) {
@@ -59,19 +64,32 @@ public class ManagerMainView extends AppCompatActivity {
             myID = (String) savedInstanceState.getSerializable("UID");
         }
 
-        //set layout
-        setContentView(R.layout.manager_main_view);
+        //drawer
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        //end drawer
 
         //floating action button add task - visible only to manager
-       FloatingActionButton floating = (FloatingActionButton)findViewById(R.id.fab_add_task);
+        FloatingActionButton floating = (FloatingActionButton)findViewById(R.id.fab_add_task);
 
         if(this.myRole.compareTo("manager") != 0) {
             floating.hide();
+            MenuItem item = navigationView.getMenu().getItem(0);
+            item.setVisible(false);
         }
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-         pageAdapter = new SampleFragmentPagerAdapter(getSupportFragmentManager(),
+        pageAdapter = new SampleFragmentPagerAdapter(getSupportFragmentManager(),
                 ManagerMainView.this);
         viewPager.setAdapter(pageAdapter);
 
@@ -161,29 +179,7 @@ public class ManagerMainView extends AppCompatActivity {
             }
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if(getMyRole().compareTo("manager") == 0) {
-            menu.add(Menu.NONE, R.id.add_member, Menu.NONE, R.string.add_member_title);
-        }
-        menu.add(Menu.NONE, R.id.logout, Menu.NONE, "Logout");
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_member:
-                AddMemberClicked();
-                return true;
-            case R.id.logout:
-                Logout();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+    
 
     public String getMyRole() {
         try {
@@ -236,7 +232,7 @@ public class ManagerMainView extends AppCompatActivity {
         myIntent.putExtra("myID", myID);
         ManagerMainView.this.startActivity(myIntent);
     }
-    public void AddMemberClicked(){
+    public void ManageClicked(){
         Intent myIntent = new Intent(ManagerMainView.this, InviteMembers.class);
         myIntent.putExtra("UID", myID);
         ManagerMainView.this.startActivity(myIntent);
@@ -285,6 +281,27 @@ public class ManagerMainView extends AppCompatActivity {
         notificationManager.notify(0, notification);
     }
 
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_manage) {
+            ManageClicked();
+        } else if (id == R.id.nav_settings) {
+
+        } else if (id == R.id.nav_logout) {
+            Logout();
+        } else if (id == R.id.nav_about) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
 
 
