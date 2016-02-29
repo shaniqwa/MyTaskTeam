@@ -1,10 +1,14 @@
 package com.mobile.shenkar.shani.mytaskteam;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -33,8 +37,9 @@ public class ReportTask extends AppCompatActivity {
     private RadioGroup mainRadioGroupStatus;
     private RadioGroup acceptRadioGroupStatus;
 
-
-
+   private FloatingActionButton floating ;
+    public  static ImageView imageView  = null;
+    String strNewImage = null;
 
     String currStatus;
 
@@ -57,6 +62,9 @@ public class ReportTask extends AppCompatActivity {
             task = new JSONObject();
         }
         setContentView(R.layout.report_task);
+        floating = (FloatingActionButton)findViewById(R.id.fab_task_done_camera);
+        imageView = (ImageView) findViewById(R.id.imageView);
+       floating.hide();
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         cat = (TextView) findViewById(R.id.textCat);
@@ -104,15 +112,18 @@ public class ReportTask extends AppCompatActivity {
                 switch(checkedId) {
                     case R.id.waiting:
                         accept.setChecked(true);
+                        floating.hide();
                         currStatus = "1";
                         break;
                     case R.id.in_process:
+                        floating.hide();
                         accept.setChecked(true);
                         currStatus = "2";
                         break;
                     case R.id.done:
                         accept.setChecked(true);
                         currStatus = "3";
+                        floating.show();
                         break;
                 }
             }
@@ -127,6 +138,7 @@ public class ReportTask extends AppCompatActivity {
                         accept_waiting.setEnabled(false);
                         accept_in_process.setEnabled(false);
                         accept_done.setEnabled(false);
+                        floating.hide();
                         currStatus = "4";
                         break;
                     case R.id.accept:
@@ -173,6 +185,7 @@ public class ReportTask extends AppCompatActivity {
                 case "3": //accept - done
                     accept.setChecked(true);
                     accept_done.setChecked(true);
+                    floating.show();
                     break;
                 case "4":  //reject
                     reject.setChecked(true);
@@ -185,6 +198,43 @@ public class ReportTask extends AppCompatActivity {
         catch (Exception ex) {
             Log.e("error", ex.toString());
         }
+    }
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    Bitmap m_bit;
+    // fire camera intent
+    public void dispatchTakePictureIntent(View v) {
+
+        try {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+        catch(Exception ex){}
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                Bundle extras = data.getExtras();
+                try {
+                    m_bit = (Bitmap) extras.get("data");
+                } catch (Exception e) {
+                    m_bit = null;
+                }
+
+                if (m_bit != null)
+                {
+                    // handle bitmap
+                    strNewImage = imageHelper.encodeTobase64(m_bit);
+                    imageView.setImageBitmap(m_bit);
+                    //todo: send image as base64 to the server
+                }
+
+            }
+        }
+        catch(Exception ex){}
     }
 
     public void save_report_task(View view) {
@@ -199,6 +249,9 @@ public class ReportTask extends AppCompatActivity {
                         try {
                             json.put("taskID", task.getString("taskID"));
                             json.put("status", currStatus);
+                            if(strNewImage != null){
+                                json.put("image", strNewImage);
+                            }
 
                         } catch (JSONException e) {
                             strUID = "-1";

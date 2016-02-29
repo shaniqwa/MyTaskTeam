@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:paddingLeft="30px"
@@ -159,6 +159,26 @@
                 android:layout_gravity="left" />
 
         </RadioGroup>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_task_done_camera"
+            app:backgroundTint="@color/colorPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_action_image"
+            app:layout_anchorGravity="bottom|right|end"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp"
+            android:onClick="dispatchTakePictureIntent" />
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/imageView"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
