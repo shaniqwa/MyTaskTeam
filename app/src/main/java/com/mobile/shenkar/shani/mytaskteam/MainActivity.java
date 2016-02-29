@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,16 +16,18 @@ public class MainActivity extends AppCompatActivity {
     EditText email ;
     EditText pass;
     EditText phone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.signup);
+
+
         email = (EditText)findViewById(R.id.txtEmail);
         pass = (EditText)findViewById(R.id.txtPass);
         phone = (EditText)findViewById(R.id.txtPhone);
         CheckPreviousLogins();
     }
-
 
 
     private void CheckPreviousLogins()
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e)
         {
-            Log.e("Cant fetch uid from SharedPreferences", e.getMessage());
+            Log.e("Cant fetch uid", e.getMessage());
         }
         try {
             if (strMyId.compareTo("-1") != 0)
@@ -54,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch(Exception ex)
         {
-            Log.e("Cant fetch uid from SharedPreferences", ex.getMessage());
+            Log.e("Cant fetch uid", ex.getMessage());
         }
     }
 
@@ -122,17 +125,10 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-    public void showToast(final String toast)
-    {
-
-        final int width = this.getWindow().getAttributes().width;
+    public void showToast(final String toast){
         runOnUiThread(new Runnable() {
             public void run() {
-                //Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
-                Intent i = new Intent("android.intent.action.ALERT");
-                i.putExtra("AlertBoxText", toast);
-                i.putExtra("ParentWidth", width);
-                startActivity(i);
+                Toast.makeText(MainActivity.this, toast, Toast.LENGTH_LONG).show();
             }
         });
     }
