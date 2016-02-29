@@ -9,8 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +40,10 @@ public class ReportTask extends AppCompatActivity {
     private RadioGroup acceptRadioGroupStatus;
 
    private FloatingActionButton floating ;
-    public  static ImageView imageView  = null;
+    public ImageView imageView  = null;
+    ImageView fullScreenContainer;
     String strNewImage = null;
-
+    boolean isImageFitToScreen;
     String currStatus;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +66,27 @@ public class ReportTask extends AppCompatActivity {
         }
         setContentView(R.layout.report_task);
         floating = (FloatingActionButton)findViewById(R.id.fab_task_done_camera);
-        imageView = (ImageView) findViewById(R.id.imageView);
+       imageView = (ImageView) findViewById(R.id.imageView);
        floating.hide();
 
+        /////
+
+        //test-scale photo
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isImageFitToScreen) {
+                    isImageFitToScreen = false;
+                    imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, ScrollView.LayoutParams.WRAP_CONTENT));
+                    imageView.setAdjustViewBounds(true);
+                } else {
+                    isImageFitToScreen = true;
+                    imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                }
+            }
+        });
+            //test
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         cat = (TextView) findViewById(R.id.textCat);
         des = (TextView) findViewById(R.id.textDes);
@@ -229,13 +250,31 @@ public class ReportTask extends AppCompatActivity {
                     // handle bitmap
                     strNewImage = imageHelper.encodeTobase64(m_bit);
                     imageView.setImageBitmap(m_bit);
-                    //todo: send image as base64 to the server
+                    imageView.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(ReportTask.this, FullScreenImage.class);
+
+                            imageView.buildDrawingCache();
+                            Bitmap image = imageView.getDrawingCache();
+
+                            Bundle extras = new Bundle();
+                            extras.putParcelable("imagebitmap", image);
+                            intent.putExtras(extras);
+                            startActivity(intent);
+
+                        }
+                    });
+
                 }
+
 
             }
         }
         catch(Exception ex){}
     }
+
 
     public void save_report_task(View view) {
 
