@@ -2,8 +2,12 @@ package com.mobile.shenkar.shani.mytaskteam;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -19,6 +23,20 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.login_toolbar);
+        myToolbar.setTitle("Login");
+        setSupportActionBar(myToolbar);
+
+        Drawable mDrawable = this.getResources().getDrawable(android.R.drawable.arrow_down_float);
+        int backgroundColor = getResources().getColor(R.color.colorPrimaryDark);
+        mDrawable.setColorFilter(new
+                PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY) );
+
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(mDrawable);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
          email = (EditText)findViewById(R.id.txtEmail);
          pass = (EditText)findViewById(R.id.txtPass);
     }

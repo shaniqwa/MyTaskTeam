@@ -2,8 +2,12 @@ package com.mobile.shenkar.shani.mytaskteam;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -21,6 +25,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle("Sign up");
+        setSupportActionBar(myToolbar);
+
+        Drawable mDrawable = this.getResources().getDrawable(android.R.drawable.ic_menu_add);
+        int backgroundColor = getResources().getColor(R.color.colorPrimaryDark);
+        mDrawable.setColorFilter(new
+                PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY) );
+
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(mDrawable);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
 
         email = (EditText)findViewById(R.id.txtEmail);

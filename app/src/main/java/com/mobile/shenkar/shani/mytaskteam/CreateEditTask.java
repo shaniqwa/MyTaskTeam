@@ -2,8 +2,12 @@ package com.mobile.shenkar.shani.mytaskteam;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +75,19 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_edit_task);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.create_edit_toolbar);
+        myToolbar.setTitle("Create / Edit Task");
+        setSupportActionBar(myToolbar);
+
+        Drawable mDrawable = this.getResources().getDrawable(android.R.drawable.editbox_background);
+        int backgroundColor = getResources().getColor(R.color.colorPrimaryDark);
+        mDrawable.setColorFilter(new
+                PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY) );
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(mDrawable);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // receives values from previous activity
             if (savedInstanceState == null) {
