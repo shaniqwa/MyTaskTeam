@@ -249,6 +249,10 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         Intent myIntent = new Intent(ManagerMainView.this, About.class);
         ManagerMainView.this.startActivity(myIntent);
     }
+    public void Settings(){
+        Intent myIntent = new Intent(ManagerMainView.this, Settings.class);
+        ManagerMainView.this.startActivity(myIntent);
+    }
 
 
     public void Logout(){
@@ -304,6 +308,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         if (id == R.id.nav_manage) {
             ManageClicked();
         } else if (id == R.id.nav_settings) {
+            Settings();
 
         } else if (id == R.id.nav_logout) {
             Logout();
