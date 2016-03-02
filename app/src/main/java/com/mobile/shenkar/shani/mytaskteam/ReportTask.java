@@ -121,6 +121,12 @@ public class ReportTask extends AppCompatActivity {
                 priority.setText("High");
             }
             setRadioForStatus(task.getString("status"));
+
+//if exists, set done image
+//            if(task.getString("image").compareTo("")!= 0 ){
+//                Bitmap temp = imageHelper.decodeBase64((task.getString("image")));
+//                imageView.setImageBitmap(temp);
+//            }
         } catch (JSONException e) {
             cat.setText("Error");
         }
@@ -309,7 +315,25 @@ public class ReportTask extends AppCompatActivity {
                         showToast("Oops! something went wrong.. please try again");
                     }
                     else {
-                        showToast( "You have: \"" + currStatus + "\" new tasks" );
+                        String statusIs = null;
+                        switch (currStatus){
+                            case "0" :
+                                statusIs = "No replay";
+                                break;
+                            case "1" :
+                                statusIs = "Waiting";
+                                break;
+                            case "2" :
+                                statusIs = "In Process";
+                                break;
+                            case "3" :
+                                statusIs = "Done";
+                                break;
+                            case "4" :
+                                statusIs = "Reject";
+                                break;
+                        }
+                        showToast("Status is now " + statusIs);
                         //set the next activity
                         Intent myIntent = new Intent(ReportTask.this, ManagerMainView.class);
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
