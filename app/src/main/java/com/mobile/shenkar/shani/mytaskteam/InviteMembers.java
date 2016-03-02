@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,7 @@ public class InviteMembers extends AppCompatActivity {
     EditText teamName;
     String myID;
     String myRole;
+    String myName;
     Button send;
     JSONArray m_allMembers = null;
     List<String> memberlist ;
@@ -38,6 +40,15 @@ public class InviteMembers extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.invite_members);
+
+        //set toolbar
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.manage_toolbar);
+        myToolbar.setTitle("Manage Team");
+        setSupportActionBar(myToolbar);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // receives values from previous activity
         if (savedInstanceState == null) {
@@ -47,14 +58,15 @@ public class InviteMembers extends AppCompatActivity {
             } else {
                 myID= extras.getString("UID");
                 myRole= extras.getString("role");
+                myName= extras.getString("name");
             }
         } else {
             myID = (String) savedInstanceState.getSerializable("UID");
         }
 
-        setContentView(R.layout.invite_members);
 
         teamName = (EditText)findViewById(R.id.editText);
+        teamName.setText(myName);
         send = (Button)findViewById(R.id.button3);
 
         ArrayList<String> lst = getEmailDetails();
@@ -137,7 +149,7 @@ public class InviteMembers extends AppCompatActivity {
         //todo : go to invite member activity first to choose taem name and members. only then continue to main view
         Intent myIntent = new Intent(InviteMembers.this, ManagerMainView.class);
         myIntent.putExtra("UID", myID);
-        myIntent.putExtra("role", myRole);
+        myIntent.putExtra("role", "manager");
         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         InviteMembers.this.startActivity(myIntent);
         finish();

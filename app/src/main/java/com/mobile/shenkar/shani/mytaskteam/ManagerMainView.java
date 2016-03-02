@@ -40,6 +40,7 @@ import java.util.List;
 public class ManagerMainView extends ActionBarActivity implements NavigationView.OnNavigationItemSelectedListener{
     String myID;
     String myRole;
+    String myName;
     JSONArray m_allTasks = null;
     Spinner sort;
     SampleFragmentPagerAdapter pageAdapter;
@@ -59,6 +60,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
             } else {
                 myID= extras.getString("UID");
                 myRole= extras.getString("role");
+                myName= extras.getString("name");
             }
         } else {
             myID = (String) savedInstanceState.getSerializable("UID");
@@ -66,6 +68,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
 
         //drawer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(myName);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -81,11 +84,6 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         //end drawer
-
-        //set logo befor title
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setLogo(R.drawable.ic_action_image);
-//        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         //floating action button add task - visible only to manager
         FloatingActionButton floating = (FloatingActionButton)findViewById(R.id.fab_add_task);
@@ -244,6 +242,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
     public void ManageClicked(){
         Intent myIntent = new Intent(ManagerMainView.this, InviteMembers.class);
         myIntent.putExtra("UID", myID);
+        myIntent.putExtra("name", myName);
         ManagerMainView.this.startActivity(myIntent);
     }
 

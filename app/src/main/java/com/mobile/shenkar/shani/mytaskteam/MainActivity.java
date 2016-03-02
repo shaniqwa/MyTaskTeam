@@ -2,9 +2,6 @@ package com.mobile.shenkar.shani.mytaskteam;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,14 +27,8 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setTitle("Sign up");
         setSupportActionBar(myToolbar);
 
-        Drawable mDrawable = this.getResources().getDrawable(android.R.drawable.ic_menu_add);
-        int backgroundColor = getResources().getColor(R.color.colorPrimaryDark);
-        mDrawable.setColorFilter(new
-                PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY) );
-
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(mDrawable);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
 
@@ -52,11 +43,13 @@ public class MainActivity extends AppCompatActivity {
     {
         String strMyId = "-1";
         String strMyRole = "member";
+        String strMyName = "name";
         try
         {
             SharedPreferences prefs = getSharedPreferences("MyTaskTeam", MODE_PRIVATE);
             strMyId = prefs.getString("StoredUID", "-1");
             strMyRole = prefs.getString("StoredRole", "member");
+            strMyName = prefs.getString("StoredName", "name");
         }
         catch (Exception e)
         {
@@ -69,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 myIntent.putExtra("UID", strMyId);
                 myIntent.putExtra("role", strMyRole);
+                myIntent.putExtra("name", strMyName);
                 MainActivity.this.startActivity(myIntent);
                 finish();
             }

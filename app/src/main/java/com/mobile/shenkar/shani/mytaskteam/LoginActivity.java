@@ -2,9 +2,6 @@ package com.mobile.shenkar.shani.mytaskteam;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,14 +25,10 @@ public class LoginActivity extends AppCompatActivity {
         myToolbar.setTitle("Login");
         setSupportActionBar(myToolbar);
 
-        Drawable mDrawable = this.getResources().getDrawable(android.R.drawable.arrow_down_float);
-        int backgroundColor = getResources().getColor(R.color.colorPrimaryDark);
-        mDrawable.setColorFilter(new
-                PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY) );
+
 
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(mDrawable);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
          email = (EditText)findViewById(R.id.txtEmail);
          pass = (EditText)findViewById(R.id.txtPass);
@@ -49,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     String strUID = "";
                     String strROLE = "";
+                    String strNAME = "";
                     JSONObject json = new JSONObject();
                     try {
                         json.put("email", email.getText().toString());
@@ -63,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
                         String ans = TalkToServer.PostToUrl(strURL, json.toString());
                         strUID = ans.split(" ")[0];
                         strROLE = ans.split(" ")[1];
+                        int begin = strUID.length() + strROLE.length() + 2;
+                        strNAME = ans.substring(begin,ans.length());
                     } catch (Exception ex) {
                         strUID = "-1";
                         Log.e("error creating SignIn: ", ex.toString());
@@ -78,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("StoredUID", strUID);
                         editor.putString("StoredRole", strROLE);
+                        editor.putString("StoredName", strNAME);
                         editor.commit();
 
                         //set the next activity
@@ -85,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         myIntent.putExtra("UID", strUID);
                         myIntent.putExtra("role", strROLE);
+                        myIntent.putExtra("name", strNAME);
                         LoginActivity.this.startActivity(myIntent);
                         finish();
                     }
