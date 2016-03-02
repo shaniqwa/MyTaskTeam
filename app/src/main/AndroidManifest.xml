@@ -34,6 +34,9 @@
             android:screenOrientation="portrait"/>
         <activity android:label="Task Image" android:name=".FullScreenImage" android:configChanges="orientation"
             android:screenOrientation="portrait"/>
+        <activity android:label="About" android:name=".About" android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

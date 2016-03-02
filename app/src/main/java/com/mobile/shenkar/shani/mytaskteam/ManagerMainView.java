@@ -245,6 +245,11 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         myIntent.putExtra("name", myName);
         ManagerMainView.this.startActivity(myIntent);
     }
+    public void About(){
+        Intent myIntent = new Intent(ManagerMainView.this, About.class);
+        ManagerMainView.this.startActivity(myIntent);
+    }
+
 
     public void Logout(){
         //clear my data
@@ -303,6 +308,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         } else if (id == R.id.nav_logout) {
             Logout();
         } else if (id == R.id.nav_about) {
+            About();
 
         }
 

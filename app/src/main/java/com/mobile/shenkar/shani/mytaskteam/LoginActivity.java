@@ -24,14 +24,11 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         myToolbar.setTitle("Login");
         setSupportActionBar(myToolbar);
-
-
-
-
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
-         email = (EditText)findViewById(R.id.txtEmail);
-         pass = (EditText)findViewById(R.id.txtPass);
+
+        email = (EditText)findViewById(R.id.txtEmail);
+        pass = (EditText)findViewById(R.id.txtPass);
     }
 
     /** Called when the user clicks the Next button */
