@@ -36,6 +36,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("ALL")
 public class ManagerMainView extends ActionBarActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -46,6 +49,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
     Spinner sort;
     SampleFragmentPagerAdapter pageAdapter;
     Integer newCounter = 0;
+    ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
 
 
     @Override
@@ -122,7 +126,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 0:
                         SortByPriority(selectedItemView);
                         break;
@@ -140,6 +144,18 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
 
         //first load of the data from server
         reloadData();
+
+        PreferenceManager.getDefaultSharedPreferences(this).getString("TimeInterval", "defaultStringIfNothingFound");
+
+        final View v = this.findViewById(android.R.id.content);
+
+        //  schedule a runnable task every 1 minutes perform check
+        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                check(v);
+//                showToast("event");
+            }
+        }, 0, 100, TimeUnit.MINUTES);
     }
 
     public void  reloadData() {
@@ -267,6 +283,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         finish();
     }
     public void check(View v){
+        showToast("Looking for new tasks...");
         pageAdapter.refreshAll();
     }
     public void SortByDate(View v){
@@ -276,7 +293,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         pageAdapter.sortByPriority();
     }
 
-    public void showToast(final String toast){
+    public void showToast(final String toast) {
         runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(ManagerMainView.this, toast, Toast.LENGTH_LONG).show();
