@@ -123,12 +123,27 @@ public class ReportTask extends AppCompatActivity {
             setRadioForStatus(task.getString("status"));
 
             //if exists, set done image
-            String img = task.getString("image");
+            String img = task.getString("base64img");
             if(img != null && !img.isEmpty() ){
-//                String encodedImage =  task.getString("image");
-//                byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-//                Bitmap temp = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//                imageView.setImageBitmap(temp);
+                String encodedImage =  task.getString("base64img");
+                Bitmap decoded = imageHelper.decodeBase64(encodedImage);
+                imageView.setImageBitmap(decoded);
+                imageView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(ReportTask.this, FullScreenImage.class);
+
+                        imageView.buildDrawingCache();
+                        Bitmap image = imageView.getDrawingCache();
+
+                        Bundle extras = new Bundle();
+                        extras.putParcelable("imagebitmap", image);
+                        intent.putExtras(extras);
+                        startActivity(intent);
+
+                    }
+                });
             }
         } catch (JSONException e) {
             Log.d("SET DEFAULT: ","error setting task values");

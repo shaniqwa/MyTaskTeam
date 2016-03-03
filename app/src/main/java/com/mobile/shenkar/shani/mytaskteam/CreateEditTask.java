@@ -2,6 +2,7 @@ package com.mobile.shenkar.shani.mytaskteam;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -51,6 +53,7 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
 
     private String currAssignee;
 
+    public ImageView imageView  = null;
 
 //    TextView currDate;
     EditText des;
@@ -134,6 +137,8 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
         date_today = (RadioButton) findViewById(R.id.radioButton11);
         date_tom = (RadioButton) findViewById(R.id.radioButton14);
         date = (RadioButton) findViewById(R.id.radioButton15);
+
+        imageView = (ImageView) findViewById(R.id.taskImage);
 //      END findViewsById
 
 
@@ -264,6 +269,32 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
                 currPriority = Integer.parseInt(task.getString("priority"));
 
                 setRadioForDate(task.getString("dueTime"));
+
+                //if exists, set done image
+                String img = task.getString("base64img");
+                if(img != null && !img.isEmpty() ){
+                    String encodedImage =  task.getString("base64img");
+                    Bitmap decoded = imageHelper.decodeBase64(encodedImage);
+                    imageView.setImageBitmap(decoded);
+                    imageView.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(CreateEditTask.this, FullScreenImage.class);
+
+                            imageView.buildDrawingCache();
+                            Bitmap image = imageView.getDrawingCache();
+
+                            Bundle extras = new Bundle();
+                            extras.putParcelable("imagebitmap", image);
+                            intent.putExtras(extras);
+                            startActivity(intent);
+
+                        }
+                    });
+                }
+
+
             } catch (JSONException e) {
                 des.setText("");
             }

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -52,6 +53,8 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mtt_activity_main);
 
+        myName = PreferenceManager.getDefaultSharedPreferences(this).getString("StoredName", "My task team");
+
         // receives values from previous activity
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -60,7 +63,6 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
             } else {
                 myID= extras.getString("UID");
                 myRole= extras.getString("role");
-                myName= extras.getString("name");
             }
         } else {
             myID = (String) savedInstanceState.getSerializable("UID");
