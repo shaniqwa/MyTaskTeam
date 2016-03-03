@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("ALL")
 public class ManagerMainView extends ActionBarActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -145,17 +144,17 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         //first load of the data from server
         reloadData();
 
-        PreferenceManager.getDefaultSharedPreferences(this).getString("TimeInterval", "defaultStringIfNothingFound");
-
-        final View v = this.findViewById(android.R.id.content);
-
-        //  schedule a runnable task every 1 minutes perform check
-        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                check(v);
-//                showToast("event");
-            }
-        }, 0, 100, TimeUnit.MINUTES);
+//        //get time interval from users preferences. if not set, defualt is 5 minutes
+//        String time =  PreferenceManager.getDefaultSharedPreferences(this).getString("TimeInterval", "1");
+//        int timeInterval = Integer.parseInt(time);
+//        final View v = this.findViewById(android.R.id.content);
+//
+//        //  schedule a runnable task every 1 minutes perform check
+//        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+//            public void run() {
+//                check(v);
+//            }
+//        }, 0, timeInterval, TimeUnit.MINUTES);
     }
 
     public void  reloadData() {
