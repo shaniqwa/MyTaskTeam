@@ -268,9 +268,9 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
                 des.setText("");
             }
             //END set current task values - edit task
-        }else{
-//            currDate.setVisibility(View.GONE);
         }
+
+
         // radio button links to layout and add event listeners
         radioGroupPriority = (RadioGroup) findViewById(R.id.radioGroupPriority);
         radioGroupPriority.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -314,6 +314,11 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+
+        if(create){
+            priority_medium.setChecked(true);
+            date_today.setChecked(true);
+        }
 
 
     }
@@ -384,7 +389,11 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
                         showToast("Oops! something went wrong.. please try again");
                     }
                     else {
-                        showToast("New Task created and sent");
+                        if(create){
+                            showToast("New Task created and sent");
+                        }else{
+                            showToast("Task " + des.getText() + " has been updated");
+                        }
                         //set the next activity
                         Intent myIntent = new Intent(CreateEditTask.this, ManagerMainView.class);
                         myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

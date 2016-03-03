@@ -122,13 +122,16 @@ public class ReportTask extends AppCompatActivity {
             }
             setRadioForStatus(task.getString("status"));
 
-//if exists, set done image
-//            if(task.getString("image").compareTo("")!= 0 ){
-//                Bitmap temp = imageHelper.decodeBase64((task.getString("image")));
+            //if exists, set done image
+            String img = task.getString("image");
+            if(img != null && !img.isEmpty() ){
+//                String encodedImage =  task.getString("image");
+//                byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+//                Bitmap temp = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 //                imageView.setImageBitmap(temp);
-//            }
+            }
         } catch (JSONException e) {
-            cat.setText("Error");
+            Log.d("SET DEFAULT: ","error setting task values");
         }
 
         // status radio group links to layout and add event listeners

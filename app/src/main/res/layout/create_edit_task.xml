@@ -107,8 +107,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/radioGroupDate"
-            android:layout_toLeftOf="@+id/submit_task"
-            android:layout_toStartOf="@+id/submit_task" />
+            android:layout_toStartOf="@+id/submit_task"
+            android:layout_alignRight="@+id/radioGroupDate"
+            android:layout_alignEnd="@+id/radioGroupDate" />
 
         <EditText
             android:layout_width="wrap_content"
