@@ -25,7 +25,7 @@
         <NumberPicker
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:id="@+id/numberPicker"
+            android:id="@+id/numberPicker1"
             android:layout_below="@+id/textView15"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
@@ -40,6 +40,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
+
 
     </RelativeLayout>
 
