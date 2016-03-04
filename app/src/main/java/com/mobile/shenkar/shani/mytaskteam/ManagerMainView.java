@@ -4,12 +4,12 @@ package com.mobile.shenkar.shani.mytaskteam;
  * Created by Shani on 12/14/15.
  */
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -90,6 +90,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         navigationView.setNavigationItemSelectedListener(this);
         //end drawer
 
+
         //floating action button add task - visible only to manager
         FloatingActionButton floating = (FloatingActionButton)findViewById(R.id.fab_add_task);
 
@@ -142,7 +143,11 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         });
 
         //first load of the data from server
-        reloadData();
+        try {
+            reloadData();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 //        //get time interval from users preferences. if not set, defualt is 5 minutes
 //        String time =  PreferenceManager.getDefaultSharedPreferences(this).getString("TimeInterval", "1");
@@ -157,7 +162,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
 //        }, 0, timeInterval, TimeUnit.MINUTES);
     }
 
-    public void  reloadData() {
+    public void  reloadData() throws JSONException {
         m_allTasks = null;
         //get tasks from server
         Thread thread = new Thread(new Runnable() {
@@ -202,6 +207,25 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
                 e.printStackTrace();
             }
         }
+        if(getMyRole().compareTo("member")==0){
+            JSONObject obj = null;
+            if(m_allTasks!=null){
+                newCounter = 0;
+                for (int j = 0; j < m_allTasks.length(); j++) {
+                    obj = m_allTasks.getJSONObject(j);
+                    if (obj.getString("new").compareTo("0") == 0) {
+                        newCounter++;
+                    }
+                }
+                if(newCounter == 1){
+                    Notification(newCounter, obj);
+                }else{
+                    obj = null;
+                    Notification(newCounter, obj);
+                }
+
+            }
+        }
     }
 
 
@@ -223,7 +247,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         try {
             if(m_allTasks != null) {
                 if (i == 1) {
-                    // pending
+                    // all
                     for (int j = 0; j < m_allTasks.length(); j++) {
                         JSONObject obj = m_allTasks.getJSONObject(j);
                         if (obj.getString("status").compareTo("3") != 0) {
@@ -282,7 +306,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         finish();
     }
     public void check(View v){
-        showToast("Looking for new tasks...");
+//        showToast("Looking for new tasks...");
         pageAdapter.refreshAll();
     }
     public void SortByDate(View v){
@@ -298,22 +322,6 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
                 Toast.makeText(ManagerMainView.this, toast, Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    public void showNotification() {
-        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, ManagerMainView.class), 0);
-        Resources r = getResources();
-        Notification notification = new NotificationCompat.Builder(this)
-                .setTicker(r.getString(R.string.notification_title))
-                .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                .setContentTitle(r.getString(R.string.notification_title))
-                .setContentText(r.getString(R.string.notification_text))
-                .setContentIntent(pi)
-                .setAutoCancel(true)
-                .build();
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
     }
 
 
@@ -338,6 +346,46 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void Notification(int newTasks, JSONObject obj){
+        Intent resultIntent;
+        if(newTasks == 0){ return; }
+        else{
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_launcher)
+                            .setContentTitle("My Task Team");
+                            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                            if(newTasks == 1 ){
+                                mBuilder.setContentText("You have received a new Task");
+                                resultIntent = new Intent(this, ReportTask.class);
+                                resultIntent.putExtra("task_json", obj.toString());
+                                stackBuilder.addParentStack(ReportTask.class);
+
+                            }else{
+                                mBuilder.setContentText("You have received some new Tasks");
+                                resultIntent = new Intent(this,ManagerMainView.class);
+                                resultIntent.putExtra("UID", myID);
+                                resultIntent.putExtra("role", myRole);
+                                resultIntent.putExtra("name", myName);
+                                stackBuilder.addParentStack(ManagerMainView.class);
+                            }
+
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            int mId = 1;
+            mNotificationManager.notify(mId, mBuilder.build());
+
+        }
     }
 }
 

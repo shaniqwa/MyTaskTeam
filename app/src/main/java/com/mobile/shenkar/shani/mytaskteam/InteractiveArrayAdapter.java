@@ -73,7 +73,7 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 			}
 
 
-			// set new tasks background to yellow -  only for members! managers have no need for this kind of notification
+			// set new tasks background to yellow -  only for members! managers have no need for this
 			// because they are the ones who create all the tasks.. therefor they cannot receive new tasks.
 			resetArrbg();
 			arrBgcolor[position] = true;

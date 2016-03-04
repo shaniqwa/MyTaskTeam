@@ -132,7 +132,10 @@ public class PageFragment extends ListFragment {
             Log.e("error: ",ex.getMessage());
         }
     }
+
+
     public void check(){
+        int newCounter = 0;
         arrObjects.clear();
         arrObjects = null;
         adapter.clear();
@@ -142,7 +145,11 @@ public class PageFragment extends ListFragment {
             public void run() {
 
                 ManagerMainView t = (ManagerMainView)getActivity();
-                t.reloadData();
+                try {
+                    t.reloadData();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 arrObjects = t.getJSONTaskForPageNumber(mPage);
             }
         });
@@ -154,7 +161,7 @@ public class PageFragment extends ListFragment {
                 Thread.sleep(500);
             }
             if (arrObjects != null){
-                int newCounter = 0;
+                newCounter = 0;
                 for (JSONObject object : arrObjects) {
                     adapter.insert(object, adapter.getCount());
                     if (object.getString("new").compareTo("0") == 0) {
@@ -162,17 +169,11 @@ public class PageFragment extends ListFragment {
                     }
                 }
 
-                if ((getRole().compareTo("member") == 0) && (mPage == 1)){
-                    ManagerMainView t = (ManagerMainView)getActivity();
-                    t.showToast( "You have " + newCounter + " new tasks");
-//                        showNotification();
-
+                if ((getRole().compareTo("member") == 0) && (mPage == 1) && newCounter==0){
                     //if there are no new tasks set all list background color back to white
-                    if(newCounter==0){
-                        for (int i = 0; i < MylistView.getChildCount(); i++) {
-                            View listItem = MylistView.getChildAt(i);
-                            listItem.setBackgroundColor(Color.WHITE);
-                        }
+                    for (int i = 0; i < MylistView.getChildCount(); i++) {
+                        View listItem = MylistView.getChildAt(i);
+                        listItem.setBackgroundColor(Color.WHITE);
                     }
                 }
             }
