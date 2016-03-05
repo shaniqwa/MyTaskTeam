@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,6 +49,14 @@ public class ReportTask extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.report_task);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.report_toolbar);
+        myToolbar.setTitle("Report Task");
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
 
         // receives values from previous activity
         if (savedInstanceState == null) {
@@ -64,7 +73,7 @@ public class ReportTask extends AppCompatActivity {
         } else {
             task = new JSONObject();
         }
-        setContentView(R.layout.report_task);
+
         floating = (FloatingActionButton)findViewById(R.id.fab_task_done_camera);
        imageView = (ImageView) findViewById(R.id.imageView);
        floating.hide();
@@ -109,16 +118,16 @@ public class ReportTask extends AppCompatActivity {
             cat.setText(task.getString("cat"));
             des.setText(task.getString("des"));
             location.setText(task.getString("location"));
-            assignee.setText(task.getString("assignee"));
+            assignee.setText(task.getString("assigneeName"));
 
             dueDate.setText(task.getString("dueTime"));
 
             if(task.getString("priority").compareTo("1") == 0 ){
                 priority.setText("Low");
             }else if (task.getString("priority").compareTo("2") == 0 ){
-                priority.setText("Med");
+                priority.setText("Normal");
             }else if (task.getString("priority").compareTo("3") == 0){
-                priority.setText("High");
+                priority.setText("Urgent");
             }
             setRadioForStatus(task.getString("status"));
 

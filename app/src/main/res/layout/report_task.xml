@@ -5,10 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent" android:layout_height="match_parent"
-        android:paddingLeft="30px"
-        android:paddingTop="30px"
         android:orientation="vertical"
         android:weightSum="1">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/report_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextColor="@color/colorPrimaryDark"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -188,5 +202,6 @@
             android:onClick="save_report_task"
             android:nestedScrollingEnabled="true" />
 
+    </LinearLayout>
     </LinearLayout>
 </ScrollView>
