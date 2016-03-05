@@ -91,6 +91,12 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         //end drawer
 
 
+        FloatingActionButton floating_check = (FloatingActionButton)findViewById(R.id.fab_check_task);
+        floating_check.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                check();
+            }
+        });
         //floating action button add task - visible only to manager
         FloatingActionButton floating = (FloatingActionButton)findViewById(R.id.fab_add_task);
 
@@ -138,7 +144,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                SortByPriority(parentView);
+                SortByDate(parentView);
             }
         });
 
@@ -149,6 +155,8 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
             e.printStackTrace();
         }
 
+
+        //CHECK EVERY X TIME
 //        //get time interval from users preferences. if not set, defualt is 5 minutes
 //        String time =  PreferenceManager.getDefaultSharedPreferences(this).getString("TimeInterval", "1");
 //        int timeInterval = Integer.parseInt(time);
@@ -157,9 +165,9 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
 //        //  schedule a runnable task every 1 minutes perform check
 //        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
 //            public void run() {
-//                check(v);
+//                check();
 //            }
-//        }, 0, timeInterval, TimeUnit.MINUTES);
+//        }, 0, 10, TimeUnit.SECONDS);
     }
 
     public void  reloadData() throws JSONException {
@@ -207,6 +215,8 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
                 e.printStackTrace();
             }
         }
+
+        //check if there are new tasks - show notification
         if(getMyRole().compareTo("member")==0){
             JSONObject obj = null;
             if(m_allTasks!=null){
@@ -305,8 +315,8 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         ManagerMainView.this.startActivity(myIntent);
         finish();
     }
-    public void check(View v){
-//        showToast("Looking for new tasks...");
+    public void check(){
+        showToast("Looking for new tasks...");
         pageAdapter.refreshAll();
     }
     public void SortByDate(View v){

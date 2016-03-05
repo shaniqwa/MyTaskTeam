@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("StoredUID", strUID);
                         editor.putString("StoredRole", strROLE);
-//                        editor.putString("StoredName", strNAME);
+                        editor.putString("StoredName", strNAME);
                         editor.commit();
                         PreferenceManager.getDefaultSharedPreferences(LoginActivity.getContext()).edit().putString("StoredName", strNAME).commit();
                         //set the next activity

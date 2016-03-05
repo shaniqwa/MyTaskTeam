@@ -50,7 +50,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:onClick="check"
         android:src="@drawable/ic_action_editor_vertical_align_bottom"
         app:layout_anchor="@id/viewpager"
         app:layout_anchorGravity="bottom|right|end"

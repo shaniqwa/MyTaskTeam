@@ -181,49 +181,65 @@ public class PageFragment extends ListFragment {
         } catch (Exception e) {
             Log.e("error setting adapter: ", e.getMessage());
         }
+        sortListbyPriority();
     }
 
     public void sortListbyPriority(){
-        Collections.sort(arrObjects, new Comparator<JSONObject>() {
-            @Override
-            public int compare(JSONObject lhs, JSONObject rhs) {
-                Integer lid = null;
-                try {
-                    lid = lhs.getInt("priority");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        try{
+            if(arrObjects != null){
+            Collections.sort(arrObjects, new Comparator<JSONObject>() {
+                @Override
+                public int compare(JSONObject lhs, JSONObject rhs) {
+                    Integer lid = null;
+                    try {
+                        lid = lhs.getInt("priority");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Integer rid = null;
+                    try {
+                        rid = rhs.getInt("priority");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return rid.compareTo(lid);
                 }
-                Integer rid = null;
-                try {
-                    rid = rhs.getInt("priority");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return rid.compareTo(lid);
+            });
+            adapter.notifyDataSetChanged();
             }
-        });
-        adapter.notifyDataSetChanged();
+        }catch (Exception e){
+            Log.e("tag","sort");
+        }
+
     }
 
     public void sortListbyDate(){
-        Collections.sort(arrObjects, new Comparator<JSONObject>() {
-            @Override
-            public int compare(JSONObject lhs, JSONObject rhs) {
-                String lid = null;
-                try {
-                    lid = lhs.getString("dueTime");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                String rid = null;
-                try {
-                    rid = rhs.getString("dueTime");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return lid.compareTo(rid);
+        try{
+            if(arrObjects != null){
+                Collections.sort(arrObjects, new Comparator<JSONObject>() {
+                    @Override
+                    public int compare(JSONObject lhs, JSONObject rhs) {
+                        String lid = null;
+                        try {
+                            lid = lhs.getString("dueTime");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        String rid = null;
+                        try {
+                            rid = rhs.getString("dueTime");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return lid.compareTo(rid);
+                    }
+                });
+                adapter.notifyDataSetChanged();
             }
-        });
-        adapter.notifyDataSetChanged();
+
+        }catch (Exception e){
+            Log.e("tag","date");
+        }
+
     }
 }
