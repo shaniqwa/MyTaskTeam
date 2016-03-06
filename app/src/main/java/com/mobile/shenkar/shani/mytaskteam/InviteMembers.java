@@ -99,8 +99,6 @@ public class InviteMembers extends AppCompatActivity {
         MembersListView.setAdapter(memberAdapter);
 
         GetMembersList();
-
-
     }
 
     private void sendInviteJsonToServer(final JSONObject json) {

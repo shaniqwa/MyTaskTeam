@@ -118,7 +118,7 @@ public class ReportTask extends AppCompatActivity {
             cat.setText(task.getString("cat"));
             des.setText(task.getString("des"));
             location.setText(task.getString("location"));
-            assignee.setText(task.getString("assigneeName"));
+            assignee.setText(task.getString("memberName"));
 
             dueDate.setText(task.getString("dueTime"));
 
@@ -278,10 +278,10 @@ public class ReportTask extends AppCompatActivity {
                     m_bit = null;
                 }
 
-                if (m_bit != null)
-                {
+                if (m_bit != null) {
                     // handle bitmap
                     strNewImage = imageHelper.encodeTobase64(m_bit);
+
                     imageView.setImageBitmap(m_bit);
                     imageView.setOnClickListener(new View.OnClickListener() {
 
@@ -293,7 +293,7 @@ public class ReportTask extends AppCompatActivity {
                             Bitmap image = imageView.getDrawingCache();
 
                             Bundle extras = new Bundle();
-                            extras.putParcelable("imagebitmap", image);
+                            extras.putParcelable("imagebitmap", m_bit);
                             intent.putExtras(extras);
                             startActivity(intent);
 

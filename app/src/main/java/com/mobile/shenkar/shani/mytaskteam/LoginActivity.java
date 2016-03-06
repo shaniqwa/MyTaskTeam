@@ -36,8 +36,6 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         myToolbar.setTitle("Login");
         setSupportActionBar(myToolbar);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         email = (EditText)findViewById(R.id.txtEmail);
         pass = (EditText)findViewById(R.id.txtPass);
@@ -45,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public static Context getContext(){
         return context;
-        // or return instance.getApplicationContext();
     }
 
     /** Called when the user clicks the Next button */
@@ -77,13 +74,12 @@ public class LoginActivity extends AppCompatActivity {
                         strUID = "-1";
                         Log.e("error creating SignIn: ", ex.toString());
                     }
-
                     if(strUID.compareTo("-1") == 0) {
-                        showToast("Oops! something went wrong.. please try again");
+                        showToast("Wrong username... Please try again.");
+                    }else if(strUID.compareTo("-2") == 0) {
+                        showToast("Wrong password.. Please try again");
                     }
                     else{
-//                        showToast("Logged in as user id: " + strUID);
-
                         //Google Analytics
                         if(strROLE.compareTo("member")==0){
                             mTracker.send(new HitBuilders.EventBuilder()
@@ -97,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
                                     .setAction("Login")
                                     .setLabel("manager logged in")
                                     .build());
-
                         }
 
                         SharedPreferences prefs = getSharedPreferences("MyTaskTeam", MODE_PRIVATE);
@@ -126,14 +121,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void showToast(final String toast) {
-        final int width = this.getWindow().getAttributes().width;
         runOnUiThread(new Runnable() {
             public void run() {
-                Toast.makeText(getApplicationContext(), toast, Toast.LENGTH_SHORT).show();
-                Intent i = new Intent("android.intent.action.ALERT");
-                i.putExtra("AlertBoxText", toast);
-                i.putExtra("ParentWidth", width);
-                startActivity(i);
+                Toast.makeText(LoginActivity.this, toast, Toast.LENGTH_LONG).show();
             }
         });
     }

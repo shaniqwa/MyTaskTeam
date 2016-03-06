@@ -18,13 +18,11 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 
 	private final List<JSONObject> list;
 	private final Activity context;
-	boolean[] arrBgcolor;
 
 	public InteractiveArrayAdapter(Activity context, List<JSONObject> list) {
 		super(context, R.layout.task_cell, list);
 		this.context = context;
 		this.list = list;
-		arrBgcolor = new boolean[list.size()];
 	}
 
 	static class ViewHolder {
@@ -74,9 +72,6 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 
 
 			// set new tasks background to yellow -  only for members! managers have no need for this
-			// because they are the ones who create all the tasks.. therefor they cannot receive new tasks.
-//			resetArrbg();
-//			arrBgcolor[position] = true;
 			if ((view!= null) && (obj.getString("new").compareTo("0")== 0) && (((ManagerMainView)context).getMyRole().compareTo("member")==0)) {
 				view.setBackgroundResource(R.color.colorPrimaryDark);
 			} else {
@@ -120,12 +115,4 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 
 		return view;
 	}
-
-	private void resetArrbg() {
-		for (int i = 0; i < arrBgcolor.length; i++) {
-			arrBgcolor[i] = false;
-		}
-	}
-
-
 }

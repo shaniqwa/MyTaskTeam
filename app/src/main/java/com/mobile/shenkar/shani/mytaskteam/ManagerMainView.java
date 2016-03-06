@@ -154,9 +154,6 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
     }
 
     public void  reloadData() throws JSONException {
@@ -196,8 +193,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
 
         thread.start();
 
-        while (m_allTasks == null)
-        {
+        while (m_allTasks == null) {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -224,7 +220,6 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
                     obj = null;
                     Notification(newCounter, obj);
                 }
-
             }
         }
     }
@@ -236,8 +231,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
                 this.myRole = "manager";
             }
         }
-        catch(Exception ex)
-        {
+        catch(Exception ex) {
             this.myRole = "member";
         }
         return this.myRole;

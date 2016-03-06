@@ -138,7 +138,7 @@ public class PageFragment extends ListFragment {
         }
 
 //        //CHECK EVERY X TIME
-//        //get time interval from users preferences. if not set, defualt is 5 minutes
+//        //get time interval from users preferences. if not set, default is 1 minutes
         String time =  PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("TimeInterval", "1");
         int timeInterval = Integer.parseInt(time);
         //  schedule a runnable task every 1 minutes perform check
@@ -151,7 +151,7 @@ public class PageFragment extends ListFragment {
                     }
                 });
             }
-        }, 0, 20, TimeUnit.SECONDS);
+        }, 0, timeInterval, TimeUnit.MINUTES);
     }
 
 
@@ -205,6 +205,7 @@ public class PageFragment extends ListFragment {
                         adapter.notifyDataSetChanged();
                     }
                 });
+
                 Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
