@@ -75,9 +75,9 @@ public class InteractiveArrayAdapter extends ArrayAdapter<JSONObject> {
 
 			// set new tasks background to yellow -  only for members! managers have no need for this
 			// because they are the ones who create all the tasks.. therefor they cannot receive new tasks.
-			resetArrbg();
-			arrBgcolor[position] = true;
-			if ((arrBgcolor[position]) && (obj.getString("new").compareTo("0")== 0) && (((ManagerMainView)context).getMyRole().compareTo("member")==0)) {
+//			resetArrbg();
+//			arrBgcolor[position] = true;
+			if ((view!= null) && (obj.getString("new").compareTo("0")== 0) && (((ManagerMainView)context).getMyRole().compareTo("member")==0)) {
 				view.setBackgroundResource(R.color.colorPrimaryDark);
 			} else {
 				view.setBackgroundResource(R.color.white);

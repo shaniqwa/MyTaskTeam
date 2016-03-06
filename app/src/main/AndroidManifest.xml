@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <application
+        android:name=".AnalyticsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,25 +21,62 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:label="Create a Team" android:name="CreateTeam" android:configChanges="orientation"
+        <activity   android:label="Create a Team"
+                    android:name="CreateTeam"
+                    android:parentActivityName="com.mobile.shenkar.shani.mytaskteam.ManagerMainView"
+                    android:configChanges="orientation"
+                    android:screenOrientation="portrait"/>
+        <activity android:label="Report Task"
+            android:name=".ReportTask"
+            android:configChanges="orientation"
+            android:parentActivityName="com.mobile.shenkar.shani.mytaskteam.ManagerMainView"
+            android:screenOrientation="portrait">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.mobile.shenkar.shani.mytaskteam.ManagerMainView" />
+        </activity>
+        <activity android:label="Create/Edit Task"
+            android:name=".CreateEditTask"
+            android:configChanges="orientation"
+            android:parentActivityName="com.mobile.shenkar.shani.mytaskteam.ManagerMainView"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mobile.shenkar.shani.mytaskteam.ManagerMainView" />
+        </activity>
+
+
+
+
+        <activity android:label="Main View"
+            android:name="ManagerMainView"
+            android:configChanges="orientation"
             android:screenOrientation="portrait"/>
-        <activity android:label="Report Task" android:name=".ReportTask" android:configChanges="orientation"
+        <activity android:label="Login"
+            android:name=".LoginActivity"
+            android:configChanges="orientation"
             android:screenOrientation="portrait"/>
-        <activity android:label="Create/Edit Task" android:name=".CreateEditTask" android:configChanges="orientation"
+        <activity android:label="Invite Members"
+            android:name=".InviteMembers"
+            android:configChanges="orientation"
+            android:parentActivityName="com.mobile.shenkar.shani.mytaskteam.ManagerMainView"
             android:screenOrientation="portrait"/>
-        <activity android:label="Main View" android:name="ManagerMainView" android:configChanges="orientation"
+        <activity android:label="Task Image"
+            android:name=".FullScreenImage"
+            android:configChanges="orientation"
             android:screenOrientation="portrait"/>
-        <activity android:label="Login" android:name=".LoginActivity" android:configChanges="orientation"
+        <activity android:label="About"
+            android:name=".About"
+            android:configChanges="orientation"
+            android:parentActivityName="com.mobile.shenkar.shani.mytaskteam.ManagerMainView"
             android:screenOrientation="portrait"/>
-        <activity android:label="Invite Members" android:name=".InviteMembers" android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:label="Task Image" android:name=".FullScreenImage" android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:label="About" android:name=".About" android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:label="Settings" android:name=".Settings" android:configChanges="orientation"
+        <activity android:label="Settings"
+            android:name=".Settings"
+            android:parentActivityName="com.mobile.shenkar.shani.mytaskteam.ManagerMainView"
+            android:configChanges="orientation"
             android:screenOrientation="portrait"/>
 
     </application>
+
 
 </manifest>

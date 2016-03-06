@@ -156,18 +156,7 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
         }
 
 
-        //CHECK EVERY X TIME
-//        //get time interval from users preferences. if not set, defualt is 5 minutes
-//        String time =  PreferenceManager.getDefaultSharedPreferences(this).getString("TimeInterval", "1");
-//        int timeInterval = Integer.parseInt(time);
-//        final View v = this.findViewById(android.R.id.content);
-//
-//        //  schedule a runnable task every 1 minutes perform check
-//        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-//            public void run() {
-//                check();
-//            }
-//        }, 0, 10, TimeUnit.SECONDS);
+
     }
 
     public void  reloadData() throws JSONException {
@@ -218,12 +207,14 @@ public class ManagerMainView extends ActionBarActivity implements NavigationView
 
         //check if there are new tasks - show notification
         if(getMyRole().compareTo("member")==0){
+            JSONObject temp = null;
             JSONObject obj = null;
             if(m_allTasks!=null){
                 newCounter = 0;
                 for (int j = 0; j < m_allTasks.length(); j++) {
-                    obj = m_allTasks.getJSONObject(j);
-                    if (obj.getString("new").compareTo("0") == 0) {
+                    temp = m_allTasks.getJSONObject(j);
+                    if (temp.getString("new").compareTo("0") == 0) {
+                        obj = m_allTasks.getJSONObject(j);
                         newCounter++;
                     }
                 }

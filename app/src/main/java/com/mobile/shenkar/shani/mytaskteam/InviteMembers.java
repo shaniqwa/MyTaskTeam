@@ -121,6 +121,7 @@ public class InviteMembers extends AppCompatActivity {
         thread.start();
     }
 
+    //build json with invited members
     private JSONObject getJSONForEmailArray(String[] p_arrStr) {
         JSONObject json = new JSONObject();
         try {
@@ -143,8 +144,7 @@ public class InviteMembers extends AppCompatActivity {
         return json;
     }
 
-    private void moveNext()
-    {
+    private void moveNext() {
         //set the next activity
         //todo : go to invite member activity first to choose taem name and members. only then continue to main view
         Intent myIntent = new Intent(InviteMembers.this, ManagerMainView.class);
@@ -155,6 +155,8 @@ public class InviteMembers extends AppCompatActivity {
         finish();
     }
 
+
+    //get contacts from device who have Email saved
     public ArrayList<String> getEmailDetails() {
 
         ArrayList<String> arr = new ArrayList<String>();
@@ -182,19 +184,8 @@ public class InviteMembers extends AppCompatActivity {
         if (cur.moveToFirst()) {
             do {
                 try{
-                    // names comes in hand sometimes
-                    // String name = cur.getString(1);
                     String emlAddr = cur.getString(3);
-                    // cont = new JSONObject();
-                    // cont.put("fullname", name.toLowerCase());
-//             cont.put("phone", phoneNumber);
-                    // cont.put("email", emlAddr.toLowerCase());
-                    // arr.put(cont);
                     arr.add(emlAddr.toLowerCase());
-//          // keep unique only
-//          if (emlRecsHS.add(emlAddr.toLowerCase())) {
-//             emlRecs.add(emlAddr);
-//          }
                 } catch (Exception ex) {
                     // move next!
                 }
@@ -205,10 +196,9 @@ public class InviteMembers extends AppCompatActivity {
         return arr;
     }
     private void GetMembersList() {
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
+        new Thread() {
             public void run() {
+
                 JSONObject json_req = new JSONObject();
                 String res = "";
                 try {
@@ -225,8 +215,8 @@ public class InviteMembers extends AppCompatActivity {
                     Log.e("error post to server: ", ex.toString());
                 }
 
-
                 try {
+
                     //parse the result from server to json array
                     m_allMembers = new JSONArray(res);
 
@@ -235,13 +225,24 @@ public class InviteMembers extends AppCompatActivity {
                         memberlist.add(obj.getString("memberName"));
                     }
 
-                    memberAdapter.notifyDataSetChanged();
                 } catch (Throwable t) {
-                    Log.e("My App", "Could not parse malformed JSON: \"" + res + "\"");
+                    Log.e("My App", t.getMessage());
                 }
-            }//end thread
-        });
-        thread.start();
+
+                try {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            memberAdapter.notifyDataSetChanged();
+                        }
+                    });
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
+
 
 }

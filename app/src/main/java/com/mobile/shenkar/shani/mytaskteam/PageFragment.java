@@ -4,6 +4,7 @@ package com.mobile.shenkar.shani.mytaskteam;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Shani on 12/14/15.
@@ -28,6 +32,7 @@ public class PageFragment extends ListFragment {
     protected ListView MylistView;
     protected ArrayList<JSONObject> arrObjects = null;
     public static final String ARG_PAGE = "ARG_PAGE";
+    ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
 
     InteractiveArrayAdapter adapter = null;
 
@@ -131,6 +136,22 @@ public class PageFragment extends ListFragment {
         {
             Log.e("error: ",ex.getMessage());
         }
+
+//        //CHECK EVERY X TIME
+//        //get time interval from users preferences. if not set, defualt is 5 minutes
+        String time =  PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("TimeInterval", "1");
+        int timeInterval = Integer.parseInt(time);
+        //  schedule a runnable task every 1 minutes perform check
+        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        Log.i("check", "calling check");
+                        check();
+                    }
+                });
+            }
+        }, 0, 20, TimeUnit.SECONDS);
     }
 
 
@@ -177,7 +198,18 @@ public class PageFragment extends ListFragment {
                     }
                 }
             }
-            adapter.notifyDataSetChanged();
+            try {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         } catch (Exception e) {
             Log.e("error setting adapter: ", e.getMessage());
         }
@@ -205,7 +237,17 @@ public class PageFragment extends ListFragment {
                     return rid.compareTo(lid);
                 }
             });
-            adapter.notifyDataSetChanged();
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }catch (Exception e){
             Log.e("tag","sort");
@@ -234,7 +276,17 @@ public class PageFragment extends ListFragment {
                         return lid.compareTo(rid);
                     }
                 });
-                adapter.notifyDataSetChanged();
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
         }catch (Exception e){

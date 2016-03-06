@@ -19,6 +19,9 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +58,9 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
 
     public ImageView imageView  = null;
 
+    private Tracker mTracker;
+
+
 //    TextView currDate;
     EditText des;
     Spinner assignee;
@@ -75,6 +81,10 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_edit_task);
+
+        //Google Analytics:  Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.create_edit_toolbar);
         myToolbar.setTitle("Create / Edit Task");
@@ -422,8 +432,18 @@ public class CreateEditTask extends AppCompatActivity implements View.OnClickLis
                     else {
                         if(create){
                             showToast("New Task created and sent");
+                            mTracker.send(new HitBuilders.EventBuilder()
+                                    .setCategory("Action")
+                                    .setAction("Create/Edit")
+                                    .setLabel("New Task created and sent")
+                                    .build());
                         }else{
                             showToast("Task " + des.getText() + " has been updated");
+                            mTracker.send(new HitBuilders.EventBuilder()
+                                    .setCategory("Action")
+                                    .setAction("Create/Edit")
+                                    .setLabel("Task \" + des.getText() + \" has been updated")
+                                    .build());
                         }
                         //set the next activity
                         Intent myIntent = new Intent(CreateEditTask.this, ManagerMainView.class);
